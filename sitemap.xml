@@ -14,7 +14,7 @@
     <loc>https://pvillela.github.io/blog/post/</loc>
     <lastmod>2021-03-29T06:58:53-04:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/sample_with_picture/</loc>
+    <loc>https://pvillela.github.io/blog/sample-with-picture/</loc>
     <lastmod>2021-03-29T06:58:53-04:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/page/about/</loc>
@@ -29,7 +29,7 @@
     <loc>https://pvillela.github.io/blog/creating-a-new-theme/</loc>
     <lastmod>2014-09-28T02:13:50+00:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/goisforlovers/</loc>
+    <loc>https://pvillela.github.io/blog/hugo-template-primer/</loc>
     <lastmod>2014-04-02T02:13:50+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/tags/development/</loc>
@@ -41,7 +41,7 @@
     <loc>https://pvillela.github.io/blog/tags/golang/</loc>
     <lastmod>2014-04-02T02:13:50+00:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/migrate-from-jekyll/</loc>
+    <loc>https://pvillela.github.io/blog/migrating-from-jekyll/</loc>
     <lastmod>2014-04-02T02:13:50+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/tags/</loc>
@@ -59,7 +59,7 @@
     <loc>https://pvillela.github.io/blog/categories/development/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/hugoisforlovers/</loc>
+    <loc>https://pvillela.github.io/blog/getting-started-with-hugo/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/categories/golang/</loc>
