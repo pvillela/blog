@@ -6,98 +6,63 @@
     <description>Recent content on Paulo Villela</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© Paulo Villela 2021 - All rights reserved</copyright>
-    <lastBuildDate>Mon, 29 Mar 2021 06:58:53 -0400</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Paulo Villela - All rights reserved</copyright>
+    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>About</title>
-      <link>https://pvillela.github.io/blog/about/</link>
-      <pubDate>Mon, 29 Mar 2021 06:58:53 -0400</pubDate>
+      <title>Function-Oriented Architecture (this is a work in progress)</title>
+      <link>https://pvillela.github.io/blog/2021/function_oriented_architecture/</link>
+      <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/about/</guid>
-      <description>My site with Hugo.
-about2
-about2</description>
+      <guid>https://pvillela.github.io/blog/2021/function_oriented_architecture/</guid>
+      <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
     </item>
     
     <item>
-      <title>About</title>
-      <link>https://pvillela.github.io/blog/about2/</link>
-      <pubDate>Mon, 29 Mar 2021 06:58:53 -0400</pubDate>
+      <title>Historical Comments on Microservices: 2015-2017</title>
+      <link>https://pvillela.github.io/blog/2021/historical_comments_on_microservices_2015-2017/</link>
+      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/about2/</guid>
-      <description></description>
+      <guid>https://pvillela.github.io/blog/2021/historical_comments_on_microservices_2015-2017/</guid>
+      <description>&lt;h1 id=&#34;historical-comments-on-microservices-2015-2017&#34;&gt;Historical Comments on Microservices: 2015-2017&lt;/h1&gt;
+&lt;p&gt;These are comments on microservices I made between 2015 and 2017.  Some of the content still holds, some of it I no longer agree with.&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>Sample with picture</title>
-      <link>https://pvillela.github.io/blog/sample-with-picture/</link>
-      <pubDate>Mon, 29 Mar 2021 06:58:53 -0400</pubDate>
+      <title>Why Build Microservices with Kotlin, Kafka, and Kubernetes</title>
+      <link>https://pvillela.github.io/blog/2021/why-build-microservices-with-kotlin-kafka-and-kubernetes/</link>
+      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/sample-with-picture/</guid>
-      <description>My site with Hugo.</description>
+      <guid>https://pvillela.github.io/blog/2021/why-build-microservices-with-kotlin-kafka-and-kubernetes/</guid>
+      <description>&lt;h1 id=&#34;why-build-microservices-with-kotlin-kafka-and-kubernetes&#34;&gt;Why Build Microservices with Kotlin, Kafka, and Kubernetes&lt;/h1&gt;
+&lt;p&gt;Why I chose Kotlin, Kafka, and Kubernetes for a mission-critical, high-throughput, low-latency application.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Containers, Kubernetes, and Service Mesh in a Nutshell</title>
+      <link>https://pvillela.github.io/blog/2021/containers-kubernetes-and-service-mesh-in-a-nutshell/</link>
+      <pubDate>Sat, 20 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2021/containers-kubernetes-and-service-mesh-in-a-nutshell/</guid>
+      <description>&lt;h1 id=&#34;containers-kubernetes-and-service-mesh-in-a-nutshell&#34;&gt;Containers, Kubernetes, and Service Mesh in a Nutshell&lt;/h1&gt;
+&lt;p&gt;This is a very brief distillation of the concepts around containers, Kubernetes, and service mesh.  The reader is assumed to have passing familiarity with these three terms.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>About</title>
       <link>https://pvillela.github.io/blog/page/about/</link>
-      <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/page/about/</guid>
-      <description>About Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec dolor in magna lobortis egestas. Suspendisse eu erat tempor, tristique neque eu, convallis nulla. Curabitur vel bibendum lacus, at semper mauris. Suspendisse aliquet commodo ex, sed sagittis metus aliquam id. Maecenas feugiat rutrum lorem vel imperdiet. Nullam ornare lectus ut enim finibus, et porttitor mi tincidunt. Aenean lacinia, leo quis vehicula eleifend, quam libero sagittis erat, at euismod augue mauris et sapien.</description>
+      <description>Innovative and seasoned IT professional, passionate about software engineering effectiveness and architecture. Leads large-scale systems architecture, development, maintenance, planning, and review projects in Canada, USA, Latin America, Europe, and Asia across varied industries including banking, insurance, postal services, government, utilities, health care, pharmaceuticals, transportation, hospitality, manufacturing, and telecommunications. Builds high-performance teams. Delivers system solutions for rapid introduction of new business capabilities with lightweight, cloud-native, event-driven, and function-oriented software architectures. Rescues projects, rearchitecting for scalability, performance, reliability, and productivity.</description>
     </item>
     
     <item>
       <title>Contact</title>
       <link>https://pvillela.github.io/blog/page/contact/</link>
-      <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/page/contact/</guid>
-      <description>Contact Aenean ipsum justo, semper eu nisl ut, pretium tincidunt sem. Praesent et diam sit amet lacus lobortis dictum a id lacus. Quisque hendrerit sit amet turpis eu varius. Ut id lorem ac felis ultrices tincidunt. Pellentesque consequat arcu ac fringilla imperdiet. Phasellus pellentesque, sapien non pulvinar blandit, sapien ante aliquet felis, vel porttitor sapien ante in lacus. Fusce non urna aliquet, malesuada nibh vel, luctus urna. Phasellus ut lacus molestie, varius purus quis, malesuada lorem.</description>
-    </item>
-    
-    <item>
-      <title>Creating a New Theme</title>
-      <link>https://pvillela.github.io/blog/creating-a-new-theme/</link>
-      <pubDate>Sun, 28 Sep 2014 02:13:50 +0000</pubDate>
-      
-      <guid>https://pvillela.github.io/blog/creating-a-new-theme/</guid>
-      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
-We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
-    </item>
-    
-    <item>
-      <title>(Hu)go Template Primer</title>
-      <link>https://pvillela.github.io/blog/hugo-template-primer/</link>
-      <pubDate>Wed, 02 Apr 2014 02:13:50 +0000</pubDate>
-      
-      <guid>https://pvillela.github.io/blog/hugo-template-primer/</guid>
-      <description>Hugo uses the excellent go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in go templates.
-This document is a brief primer on using go templates.</description>
-    </item>
-    
-    <item>
-      <title>Migrating from Jekyll</title>
-      <link>https://pvillela.github.io/blog/migrating-from-jekyll/</link>
-      <pubDate>Wed, 02 Apr 2014 02:13:50 +0000</pubDate>
-      
-      <guid>https://pvillela.github.io/blog/migrating-from-jekyll/</guid>
-      <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
-▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
-▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.</description>
-    </item>
-    
-    <item>
-      <title>Getting Started with Hugo</title>
-      <link>https://pvillela.github.io/blog/getting-started-with-hugo/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://pvillela.github.io/blog/getting-started-with-hugo/</guid>
-      <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.
-Save it somewhere specific as we will be using it in the next step.
-More complete instructions are available at installing hugo
-Step 2. Build the Docs Hugo has its own example site which happens to also be the documentation site you are reading right now.
-Follow the following steps:
- Clone the hugo repository Go into the repo Run hugo in server mode and build the docs Open your browser to http://localhost:1313  Corresponding pseudo commands:</description>
+      <description>Feel free to send me a message via LinkedIn at https://www.linkedin.com/in/pvillela/ and I will reply to you by email.</description>
     </item>
     
   </channel>

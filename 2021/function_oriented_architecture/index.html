@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Function-Oriented Architecture (this is a work in progress) &middot; </title>
+        <meta name="description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.82.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Function-Oriented Architecture (this is a work in progress)">
+<meta property="og:description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pvillela.github.io/blog/2021/function_oriented_architecture/">
+        <link rel="stylesheet" href="https://pvillela.github.io/blogdist/site.css">
+        <link rel="stylesheet" href="https://pvillela.github.io/blogdist/syntax.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        
+        
+        
+        
+
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a href="https://pvillela.github.io/blog">Paulo Villela</a>
+                            </h1>
+                        
+                        
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" aria-label="Github" href="https://github.com/pvillela" rel="me">
+                                <i class="fa fa-github-alt" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" aria-label="LinkedIn" href="https://linkedin.com/in/pvillela/" rel="me">
+                                <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/contact/">Contact</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/about/">About</a>
+    </li>
+
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Function-Oriented Architecture (this is a work in progress)</h1>
+    
+    <p class="post-date post-line">
+        <span>Published <time datetime="2021-03-29" itemprop="datePublished">Mon, Mar 29, 2021</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="#" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+    
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <h1 id="function-oriented-architecture">Function-Oriented Architecture</h1>
+<p>This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years.  This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</p>
+<h2 id="motivation-and-requirements">Motivation and requirements</h2>
+<p>This report describes a way to organize the internal structure of service executables to meet these key objectives:</p>
+<ul>
+<li>Easy to learn and adopt for the design and development of business services/applications.</li>
+<li>Promote modularity, high module cohesiveness, and low module coupling &ndash; key characteristics of well-architected systems.</li>
+<li>Facilitate the design of services with non-blocking and parallel processing.</li>
+<li>No <em>&ldquo;magic&rdquo;</em> and no dependence on complex runtime architectures or frameworks.</li>
+</ul>
+<p>We will see that this architecture approach yields the following additional benefits:</p>
+<ul>
+<li>Simplifies the transition and mapping from business problem to code solution.  Uses a simple vocabulary to express use case realisation and service design in a way that makes sense to business analysts (BAs), developers, and architects.</li>
+<li>Provides a sound and clear basis for effort estimates.</li>
+<li>Provides a natural structure for code.</li>
+<li>Enhances development productivity and maintainability.</li>
+<li>Enhances software quality and testability.</li>
+<li>Facilitates the assignment of work to developers and their ability to work concurrently.</li>
+<li>Is programming language agnostic.</li>
+</ul>
+<h2 id="scope">Scope</h2>
+<p>This report is about the layering and modularization of services, whether microservices or otherwise.</p>
+<p>Generally speaking, a service executable runs in a context such as:</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/Service_Context.png" alt="BROKEN_LINK"></p>
+<p>This is just an illustrative possibility.  For purposes of this discussion, it doesn&rsquo;t matter how the service is called &ndash; only that the service is called somehow and that it calls other &ldquo;<em>things</em>&rdquo; in its environment such as other services, databases, event hubs, etc.</p>
+<p>For our purposes, it also doesn&rsquo;t matter whether the service executes in a container, as a function on the cloud (FAAS &ndash; functions as a service), or on bare metal.</p>
+<p>This report focuses only on the internal software structure of a service executable.  The internal structure proposed in this report applies equally well in all of the above cases.</p>
+<h2 id="background-and-approach">Background and approach</h2>
+<p>This report describes a way to design and structure applications that is inspired by <em>functional decomposition</em>.</p>
+<p><a href="https://en.wikipedia.org/wiki/Functional_decomposition">Functional decomposition</a> is a technique or approach that has long been used in systems engineering and business process analysis.  It was widely used in software engineering before the advent of object-orientation but it was condemned by object-oriented purists and became unpopular.</p>
+<p>Interestingly, in the past few years, the object-oriented programming paradigm has been increasingly challenged by the functional programming paradigm.  This challenge has taken the form of the rising popularity of languages that support the functional paradigm, the steady incorporation of functional programming features in traditional object-oriented languages, the advent of Functions As a Service (FAAS) from cloud providers, and the wide adoption of service-oriented architectures.</p>
+<p>It is quite plain that the essence of a service is really just a function that transforms requests into responses and (usually) produces some side-effects (e.g., updates a database) as a result of its execution.  So, it is not surprising that a function-oriented way of structuring software can actually be simpler and more effective than trying to cling to the precepts espoused by object-oriented purists.</p>
+<p>Although the architecture approach described here defines a software structure based on functions, it is <strong>not</strong> dependent on functional programming.  While the software modules are functions, each module can be implemented using imperative and/or object-oriented and/or functional programming idioms, as may be most suitable with the chosen programming language and the skills of the development team.  To be clear, there is no need for developers to learn/know functional programming to apply this architecture approach.</p>
+<p>This function-oriented architecture approach has been used effectively for the delivery of multiple large-scale, high-performance systems, using different programming languages.</p>
+<p>It is worth noting that the kinds of modular decomposition discussed here are important for large applications/services involving complex business functionality.  In the case of simple services with just basic CRUD (create, read, update, delete) functionality, the decision of how the service is decomposed into modules (if it is decomposed at all) is not terribly consequential.</p>
+<h2 id="general-architecture-principles">General architecture principles</h2>
+<p>We will recap a key architecture principle that will direct and inform our approach, and mention some additional related principles.</p>
+<h3 id="modularity-with-high-module-cohesion-and-low-module-coupling">Modularity with high module cohesion and low module coupling</h3>
+<p>In order for a large system to be constructed effectively and efficiently, it should be structured with the following goals and characteristics:</p>
+<ol>
+<li>It is essential that the system structure help make the system understandable.  The harder it is to understand a system, the harder it is to construct and maintain it.</li>
+<li>To help make the system understandable, it should to be decomposed into parts, sub-parts, sub-sub-parts, etc.  This kind of hierarchical decomposition is inherent in how human beings tame complexity and solve problems.  Functional decomposition, mentioned earlier, is a way to approach this.</li>
+<li>For the sake of understandability, it should be possible to understand portions of the system without having to understand everything at once.  Let&rsquo;s loosely use the term <em>module</em> to refer to a part or sub-part of the system.  Thus, one should be able to reason about a module in isolation or just have to consider a few other modules that it directly relates to or interacts with.</li>
+<li>As the system is designed and construction progresses, understanding of requirements evolves and changes may be required.  Also, inevitably, changes to the system will be required after it is constructed, to address changing business needs and remaining defects.  Therefore, relatively small and localised changes to a module should not have a ripple effect and  impact several other modules.</li>
+</ol>
+<p>In particular, to meet objectives 3 and 4 above, a system should be made up of modules that individually have high cohesion and that have low coupling among each other.  <a href="https://en.wikipedia.org/wiki/Cohesion_(computer_science)">Cohesion</a> means that the parts/elements of the module have a clear common purpose and hang together, rather than being a loose collection of capabilities.  <a href="https://en.wikipedia.org/wiki/Coupling_(computer_programming)">Coupling</a> between modules means that changes to one impacts the other.</p>
+<p>These are the most important goals and characteristics for the structure of a system.</p>
+<h3 id="other-related-architecture-principles">Other related architecture principles</h3>
+<p>There are many additional architecture principles that can be useful in guiding how a system is architected.  While a broader discussion of architecture principles is beyond the scope of this report, a few related ones will be briefly mentioned:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Single-responsibility_principle">Single responsibility principle</a> or <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a> &ndash; These are closely related to the principle of high module cohesion.  They basically say that a module should be responsible for doing only one thing.  For example, do not mix business functionality and database I/O in one module and do not mix two unrelated business functions in one module.</li>
+<li>SOLID &ndash; This stands for <strong>S</strong>ingle Responsibility Principle, <strong>O</strong>pen/Closed Principle, <strong>L</strong>iskov Substitution Principle, <strong>I</strong>nterface Segregation Principle, <strong>D</strong>ependency Inversion.  This extends the single responsibility principle with other important principles for object-oriented architecture and design.  See <a href="https://stackify.com/solid-design-principles/">SOLID Design Principles Explained</a>, <a href="https://www.youtube.com/watch?v=TMuno5RZNeE">SOLID Principles of Object Oriented and Agile Design</a>, <a href="https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html">Solid Relevance</a>.</li>
+<li><a href="https://12factor.net/">The Twelve-Factor App</a> model &ndash;</li>
+</ul>
+<h3 id="applicability">Applicability</h3>
+<p>Adherence to the principles of high module cohesion and low module coupling is time-proven to promote development productivity, understandability, and maintainability for large, complex systems.</p>
+<p>There is, however, some overhead associated with applying these principles rigorously in all cases.  For a simple, CRUD-based application, it may be more productive to design and implement a solution whose modules are highly coupled and uncohesive, yet the solution could still be understandable and maintainable due to its simplicity.  This exception only applies to truly simple applications.  For systems with any appreciable degree of complexity, adherence to the principle of high module cohesion and low module coupling is a key for success.</p>
+<h2 id="relationship-to-object-oriented-software-structure">Relationship to object-oriented software structure</h2>
+<p>Object-orientation is a powerful programming paradigm and is great for structuring certain kinds of technical software, like graphical user interfaces and architecture frameworks.  However, its effectiveness as an approach for business software architecture is debatable.  Regardless, object-oriented programming is deeply entrenched in contemporary IT and most popular programming languages support the object-oriented paradigm in some shape or form.</p>
+<p>Without delving deeper into the debate about the effectiveness of object-orientation for business software architecture, suffice it to mention that the Spring framework, arguably the most popular software framework for Java (which is object-oriented and one of the most popular enterprise programming languages), promotes a non-object-oriented way to structure code.  Roughly speaking, with Spring, a web application is structured as a set of domain classes, controllers, business services, and repository (data access) classes.  Other than the domain classes, these classes are instantiated as singletons that are, essentially, bundles of functions.  The state in the singleton objects is just used to configure and wire the functions of interest.  The domain classes often have little functionality and are little more than glorified data structures, with the majority of the business logic residing in the business service classes.</p>
+<p>Hard-core object-oriented proponents argue that domain objects should be <em>rich</em> in functionality (as opposed to <em>anemic</em>) but, in practice, anemic objects are often used in Spring-based applications because many people find it simpler and cleaner that way.</p>
+<p>The function-oriented architecture approach described in this report goes beyond what was described in the preceding paragraphs and uses anemic domain objects (or structs) and individual functions rather than classes that represent bundles of functions.  As will be shown, it lays out components that more naturally align with the functional requirements and design, and avoids the obfuscation arising from objects that represent bundles of functions.</p>
+<h2 id="relationship-to-layered-service-architectures">Relationship to layered service architectures</h2>
+<p>There are different ways in which service-oriented application architectures are organised and described.</p>
+<p>When architecting services (micro or otherwise), a three-layer approach is often advocated (as in the previous section):</p>
+<ol>
+<li>Controller layer</li>
+<li>Business logic layer</li>
+<li>Data access layer</li>
+</ol>
+<p><img src="https://pvillela.github.io/blog/images/foa/Layered_Architecture.png" alt="BROKEN_LINK"></p>
+<p>With this layering, the flow of control is:</p>
+<ol>
+<li>Client calls controller</li>
+<li>Controller calls business layer</li>
+<li>Business layer calls data access layer</li>
+</ol>
+<p>This layering helps to separate concerns, but layered software can have undesirable compile-time dependencies, e.g. the business logic can become dependent on data access logic.  In languages like Java or C#, it is standard practice to avoid such compile time dependencies with the use of interfaces and dependency injection (a.k.a. dependency inversion or inversion of control), possibly using a framework like Spring with Java.</p>
+<p>While the use of interfaces and dependency inversion can prevent undesirable compile-time dependencies, interfaces can still introduce a semantic dependence.  If a business logic class has a dependence on a data access interface, the business logic doesn&rsquo;t depend on the <em>implementation</em> of the data access logic but it still has knowledge of and a dependence on the <em>name</em> of the interface and the names of the abstract data access operations insofar as there are calls to such operations embedded in the business logic.</p>
+<p>As will be shown later, the function-oriented architecture not only avoids undesirable compile-time dependencies but it also minimizes semantic dependencies.</p>
+<h2 id="relationship-to-clean-architecture">Relationship to <em>Clean Architecture</em></h2>
+<p>The <em>Clean Architecture</em>, articulated by Robert C. Martin in his <a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">blog</a> and further elaborated in his <a href="https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/">book</a>, is a well-known and effective way to structure software, promoting the key goals of modularity with high module cohesiveness and low module coupling.</p>
+<p><img src="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg" alt="The Clean Architecture">
+<em><!-- raw HTML omitted -->
+From Robert C. Martin&rsquo;s <!-- raw HTML omitted -->The Clean Architecture Blog<!-- raw HTML omitted --><!-- raw HTML omitted --></em></p>
+<p>The function-oriented architectural style proposed here is consistent with the Clean Architecture principles.  By refining and adding some prescription to portions of the Clean Architecture, the Function-Oriented Architecture provides a simple way to structure software in adherence with the Clean Architecture.</p>
+<p>See <a href="#mapping-to-clean-architecture">Mapping to Clean Architecture</a> for details.</p>
+<h2 id="module-meta-model-stereotypes">Module meta-model (stereotypes)</h2>
+<p>The key idea is that, when decomposing software into modules, even though there may be hundreds of modules in an application, there should only be a small number of <strong>kinds</strong> of module (the stereotypes) that characterize distinct areas of concern, and each module should be of one and only one of these kinds.</p>
+<p>The stereotype concept defined in the <a href="https://www.omg.org/spec/UML/2.5">Unified Modeling Language (UML) specification</a> (see also <a href="https://www.uml-diagrams.org/stereotype.html">https://www.uml-diagrams.org/stereotype.html</a>) roughly aligns with the meaning we give it here.  However, our approach is more informal and focused on software modularization.</p>
+<h3 id="definitions">Definitions</h3>
+<p>We will start with some definitions.  Detailed examples will be presented later.</p>
+<p>For the purposes of this report, a <em><strong>module</strong></em> is defined as a unit of code that contains a cohesive portion of the application.  This is typically a source code file.  This is not to be confused with the definition of module used in languages like Java or Kotlin.</p>
+<p>A <em><strong>module meta-model</strong></em> or <em><strong>module stereotype model</strong></em> is a specification of the different kinds of module that may be be defined for an application, the roles/responsibilities of each kind of module, and the allowed relationships and interactions between different kinds of module.</p>
+<p>A <em><strong>stereotype</strong></em> is any of the allowed kinds of module in a module meta-model.</p>
+<p>A module M is an <em><strong>instance of</strong></em> of stereotype S if and only if M conforms to the specification of S in the module meta-model.</p>
+<p>Stereotype S1 is said to <em><strong>depend on</strong></em> stereotype S2 if and only if instances of S1 are allowed to depend on instances of S2.  In our diagrams, this relationship is denoted by an open arrow.  Thus, the <em>depends on</em> relationship between two stereotypes is defined in terms of the <em>depends on</em> relationship between the instances of the two stereotypes.</p>
+<p>Stereotype S1 is said to be a <em><strong>subkind of</strong></em> stereotype S2 (or S2 is a <em><strong>superkind of</strong></em> S1) to express the fact that all the roles and responsibilities of S2, as well as the <em>depends on</em> relationships from S2 to other stereotypes, are inherited by S1.  Thus, for modules written in class-based languages, this relationship does NOT imply any subtype relationship between the instances of S1 and S2.</p>
+<h3 id="object-oriented-origins">Object-oriented origins</h3>
+<p>The idea of stereotypes was independently introduced by Rebecca Wirfs-Brock, who coined the term in her 1993 Object Magazine article “Stereotyping: A Technique for Characterizing Objects and their Interactions” and in Ivar Jacobson&rsquo;s writings, including his 1992 book &ldquo;Object Oriented Software Engineering: A Use Case Driven Approach&rdquo;.</p>
+<p>As defined by these sources, the stereotypes define a meta-model for the decomposition of the system into a small number of different kinds of classes.  Such a meta-model not only defines the areas of concern that any specific class should focus on, but it also constrains how classes that belong to different stereotypes may connect or interact with each other.</p>
+<p>Although these ideas targeted object-oriented software design, the general concept applies more generally to any kind of system.</p>
+<h3 id="simple-object-oriented-service-stereotype-model">Simple object-oriented service stereotype model</h3>
+<p>This section describes a simplified traditional object-oriented web service stereotype model.  While a full object-oriented module stereotype model might include additional and more nuanced stereotypes, the purpose of this section is just to illustrate the module stereotype concept, in a familiar object-oriented setting, as an introduction to the next section on the function-oriented stereotype model.</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/OO_Stereotypes.png" alt="BROKEN_LINK"></p>
+<p>This kind of meta-model can be used to say that, no matter how many controllers, business services, data access objects, information objects, data transfer objects, and domain objects a service/application may have, if it complies with the meta-model then:</p>
+<ul>
+<li>The allowed kinds of module (the stereotypes) are depicted as boxes in the diagram.</li>
+<li>A Controller is responsible for mediating between the request listener and the service logic; it should not do anything else.  A controller may use a Data Transfer Object and call a Business Service, but not depend on any other stereotype.</li>
+<li>A Business Service is responsible for aggregating all the functionality associated with one or more service endpoints; it should not do anything else.  A business service may depend on information objects or call data access objects, but no other stereotypes.</li>
+<li>A Data Access Object is responsible for calls to the database; it should not do anything else.  A data access object may depend on information objects but may not depend/call on any other stereotype.</li>
+<li>An Information Object is responsible for holding data and core business logic; it should not do anything else.  An information object may only depend on other information objects and may not depend/call on any other stereotype.</li>
+<li>A Domain Object is a subkind of Information Object that represents a business domain entity.</li>
+<li>A Data Transfer Object is a subkind of Information Object that is used to transfer data between application components.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="function-oriented-architecture-module-stereotype-model">Function-Oriented Architecture module stereotype model</h3>
+<p>The function-oriented module stereotype model, depicted below, can be seen to have some similarities to the above simple object-oriented example, but there are also significant differences.</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/Core_Stereotypes-black.png" alt="BROKEN_LINK"></p>
+<p>The function-oriented architecture module meta-model defines the following stereotypes, responsibilities, and constraints:</p>
+<ul>
+<li>
+<p>The allowed core kinds of module (core stereotypes) are depicted as boxes with solid black borders in the above diagram.  (Additional supporting stereotypes are discussed later in this report.)</p>
+</li>
+<li>
+<p>A <em><strong>Function</strong></em> stereotype represents a function that may take inputs, return outputs, and/or produce side-effects.  An instance of a <em>Function</em> stereotype is not necessarily a simple function, but a module that, when configured and/or wired, can produce a function.  As depicted in the diagram, a module that conforms to the <em>Function</em> stereotype implements a function interface.  Depending on the programming language and specific requirements, a <em>Function</em> module may take the form of a class, an interface, a trait, a prototype, a higher-order function, or a simple function.  The functions corresponding to <em>Function</em> stereotype instances have special meaning because they comprise the essence of the decomposition of the service/application into modules.  However, a service/application typically contains many other functions which are helper functions or sub-functions of the module functions.</p>
+</li>
+<li>
+<p>An <em><strong>Adapter</strong></em> is responsible for mediating between the request listener and the service logic; it should not do anything else.  An adapter may call a <em>Service Flow</em> and use instances of <em>Business Domain Data</em> and <em>Platform-Specific Data</em>, but it may not depend on any other stereotype.</p>
+</li>
+<li>
+<p><em><strong>Service Flow</strong></em> is a subkind of <em>Flow</em>. An instance of this stereotype is responsible for providing the implementation of a service endpoint.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Sfl</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p><em><strong>Flow</strong></em> is a subkind of <em>Function</em>.  An instance of this stereotype is responsible for orchestrating functions and should not do anything else. In particular, a <em>Flow</em> should not contain business logic or directly perform any input/output.  The functions orchestrated by a <em>Flow</em> are expected to be implemented by instances of the stereotypes that are subkinds of the <em>Function</em> stereotype, but <em>Flow</em> has no dependence on those stereotypes.  A <em>Flow</em> module may only depend on general function interfaces and on instances of the <em>Business Domain Data</em> stereotype.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Fl</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p>A <em><strong>Business Data</strong></em> module defines a data structure that contains business domain data and, possibly, convenience methods and validation methods.  A <em>Business Data</em> module may depend on other <em>Business Data</em> modules but it may not depend on any other stereotypes.  There are different varieties of <em>Business Data</em> modules:</p>
+<ul>
+<li>A <em><strong>Business Entity</strong></em> module represents a core entity of the business domain.  By convention, the names of modules implementing this have no suffix as these are the nouns for the core concepts in the domain.</li>
+<li>A <em><strong>Business Transfer Data</strong></em>  module defines a data structure that contains business data and is used to transfer data between application components.  Examples include:
+<ul>
+<li><em><strong>Function Input</strong></em>, which defines a data structure used as the input to a function.  By convention, the names of modules implementing this variety have the suffix &ldquo;<em><strong>In</strong></em>&rdquo;.</li>
+<li><em><strong>Function Output</strong></em>, which defines a data structure used as the output of a function.  By convention, the names of modules implementing this variety have the suffix &ldquo;<em><strong>Out</strong></em>&rdquo;.</li>
+<li><em><strong>Event</strong></em>, which defines a data structure for an event to be published or consumed.  By convention, the names of modules implementing this variety have the suffix &ldquo;<em><strong>Evt</strong></em>&rdquo;.</li>
+</ul>
+</li>
+</ul>
+<p>We are not designating the different varieties of <em>Business Data</em> as subkinds because often there can be dependencies among them, with any of these varieties potentially containing any of the others.</p>
+</li>
+<li>
+<p><em><strong>Business Function</strong></em> is a subkind of <em>Function</em>.  An instance of this stereotype is responsible for performing pure business logic; it should not do anything else.  In particular, a <em>Business Function</em> should involve no I/O or side-effects.  A <em>Business Function</em> module may only depend on <em>Business Domain Data</em> and <em>Supporting Function</em> modules.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Bf</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p><em><strong>Data Access Function</strong></em> is a subkind of <em>Function</em>.  An instance of this stereotype is responsible for performing database I/O; it should not do anything else.  In particular, it should not contain any business logic.  A <em>Data Access Function</em> module may only depend on <em>Business Domain Data</em>, <em>Platform-Specific Data</em>, and <em>Platform-Specific Framework</em> modules.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Daf</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p><em><strong>Service Client</strong></em> is a subkind of <em>Function</em>.  An instance of this stereotype is responsible for calling a service endpoint (internal or external); it should not do anything else.  In particular, it should not contain any business logic.  A <em>Service Client</em> module may only depend on <em>Business Domain Data</em>, <em>Platform-Specific Data</em>, and <em>Platform-Specific Framework</em> modules.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Sc</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p><em><strong>Event Publisher</strong></em> is a subkind of <em>Function</em>.  An instance of this stereotype is responsible for publishing an event; it should not do anything else.  In particular, it should not contain any business logic.  An <em>Event Publisher</em> module may only depend on <em>Business Domain Data</em>, <em>Platform-Specific Data</em>, and <em>Platform-Specific Framework</em> modules.  By convention, the names of modules implementing this stereotype have the suffix &ldquo;<em><strong>Ep</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p>A <em><strong>Supporting Function</strong></em> module is responsible for containing business logic functions that are reusable across multiple <em>Business Function</em> modules; it should not do anything else.  The functions in this kind of module must be pure, i.e., without any side-effects.  In particular, this kind of module may not perform any I/O.  A <em>Supporting Function</em> module may only depend on <em>Business Domain Data</em> modules.  By convention, the names of modules implementing this stereotype and the names of functions exported by this kind of module have the suffix &ldquo;<em><strong>Sup</strong></em>&rdquo;.</p>
+</li>
+<li>
+<p>A <em><strong>Platform-Specific Data</strong></em> module implements a data structure that contains platform-specific data and, possibly, convenience methods and validation methods.  Such a data structure is used for data transfer to/from platform services, e.g., a database, a queue, an event hub, or a remote service.  This kind of module may depend on <em>Business Data</em> modules and other <em>Platform-Specific Data</em> modules, but it may not depend on any other stereotypes.</p>
+</li>
+</ul>
+<p>A key guiding principle in this model is that each of the subkinds of the <em>Function</em> stereotype does only one kind of thing.</p>
+<p>Another key principle is that only <em>Flow</em> (including <em>Service Flow</em>) modules are allowed to call other subkinds of the <em>Function</em> stereotype.  However, those calls are always through a general function interface, so there is no dependence between the flow and the modules that implement the called functions.</p>
+<p>In particular, <em>Business Function</em>s, <em>Data Access Function</em>s, <em>Service Client</em>s, and <em>Event Publisher</em>s are not allowed to call each other.</p>
+<p>Adherence to these principles enables module decoupling, an important feature of this function-oriented architecture.</p>
+<h2 id="use-case-realisation-and-service-structure">Use case realisation and service structure</h2>
+<p>The term <em><strong>Use Case</strong></em> is commonly used and understood by both business analysts and developers &ndash; we will not attempt to define it here.</p>
+<p>A service <em><strong>Endpoint</strong></em> is a high-level business function provided by the service-based application.  This is a term familiar to developers and business analysts.  From a business perspective, a service endpoint is a business function and, from a technical perspective, it can be implemented as a function in a programming language.</p>
+<p>In a service-based application, the realisation of a use case involves interaction with one or more service endpoints &ndash; a use case is realised by calling particular service endpoints in a particular sequence.</p>
+<p>On the other hand, an endpoint may support the realisation of multiple different use cases.  In the diagram below, the preceding statements are represented by the many-to-many association between the <em>Use Case</em> and <em>Endpoint</em> entities.</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/Use_Cases_and_Services.png" alt="BROKEN_LINK"></p>
+<p>The rest of the diagram represents how a <em>Service</em> is decomposed physically and logically.</p>
+<p>A <em><strong>Service</strong></em> is defined here as a logical grouping of service <em>Endpoint</em>s.  <em>Note: In a microservices solution, all the endpoints in a Service would be functions operating on a single aggregate (or perhaps even a bounded context) in the domain-driven design sense.</em></p>
+<p>An <em><strong>Executable</strong></em> is what actually runs on the operating system.  A <em>Service</em> is made up of one or more <em>Executable</em>s and each <em>Executable</em> houses one or more <em>Endpoint</em>s.  Each <em>Endpoint</em> corresponds one-to-one to a <em>Service Flow</em>, which was defined in the previous section.  The <em>Service Flow</em> is decomposed in the <a href="#core-stereotypes">Core Stereotypes</a> diagram.</p>
+<h2 id="vocabulary">Vocabulary</h2>
+<p>With the concepts discussed so far, we have established a basic vocabulary that can be used by architects, business analysts, and developers to define the structure of services and express the realisation of use cases in service-based applications.</p>
+<p>The vocabulary is summarized below:</p>
+<ul>
+<li><em>Use Case</em> &ndash; as commonly understood.</li>
+<li><em>Endpoint</em> &ndash; high-level business function provided by the service-based application.</li>
+<li><em>Service</em> &ndash; logical grouping of <em>Endpoint</em>s.</li>
+<li><em>Executable</em> &ndash; binary that contains <em>Endpoint</em> implementations and runs on the operating system.</li>
+<li><em>Service Flow</em> &ndash; function that implements an <em>Endpoint</em>; a sub-kind of <em>Flow</em>.</li>
+<li><em>Flow</em> &ndash; function whose only responsibility is to orchestrate other functions.</li>
+<li><em>Business Function</em> &ndash; function that only performs pure business logic.</li>
+<li><em>Data Access Function</em> &ndash; function that only performs database I/O.</li>
+<li><em>Service Client</em> &ndash; function that only calls an internal or external service endpoint.</li>
+<li><em>Event Publisher</em> &ndash; function that only publishes an event.</li>
+<li><em>Business Entity</em> &ndash; core entity of the business domain; the main nouns in the vocabulary.</li>
+<li><em>Business Transfer Data</em> varieties:
+<ul>
+<li><em>Function Input</em> &ndash; input to a function.</li>
+<li><em>Function Output</em> &ndash; output of a function.</li>
+<li><em>Event</em> &ndash; an event to be published or consumed.</li>
+</ul>
+</li>
+</ul>
+<h2 id="module-granularity-function-oriented-vs-object-oriented">Module granularity: function-oriented vs object-oriented</h2>
+<p>Function-Oriented Architecture (FOA) implies a finer-grained module structure than with an object-oriented decomposition.  Below, we compare the module structure, function granularity, and call stack for the function-oriented and object-oriented decomposition approaches.</p>
+<h3 id="common-object-oriented-decomposition">Common object-oriented decomposition</h3>
+<p>The following diagram exemplifies a typical object-oriented decomposition of a service &ndash; a controller calls a business service (a.k.a. <a href="http://www.plainionist.net/Implementing-Clean-Architecture-UseCases/">use case interactor</a>) which in turn calls a DAO (or repository).  The business logic is embedded in the XyzBusSvc main method.</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/Call_Stack_OO_Coupled.png" alt="BROKEN_LINK"></p>
+<p>XyzBusSvc can reference the interface of AbcDao instead of its concrete implementation and thus avoid the problem of having the business logic depend on platform-specific logic.</p>
+<p>While this decomposition achieves some separation of concerns and some reduction of module dependencies, it has the following drawbacks:</p>
+<ul>
+<li>The core business functionality (validate input, process Abc, and prepare response) is comingled with the doIt method&rsquo;s primary purpose which should be just orchestration logic.</li>
+<li>The business functionality can&rsquo;t be easily tested on its own &ndash; the various pieces need to be tested together and XyzBusSvc requires a mock implementation of AbcDao.</li>
+<li>XyzBusSvc has a semantic dependence on AbcDao.  This will be discussed with the example below.</li>
+</ul>
+<h3 id="less-coupled-object-oriented-decomposition">Less coupled object-oriented decomposition</h3>
+<p>The previous decomposition can be modified so that the business logic is factored-out into separate methods. This way, the main method of XyzBusSvc is only responsible for orchestrating calls to methods on XyzBusSvc itself and on AbcDao.</p>
+<p><img src="https://pvillela.github.io/blog/images/foa/Call_Stack_OO_Less_Coupled.png" alt="BROKEN_LINK"></p>
+<p>This decomposition has the following advantages over the previous one:</p>
+<ul>
+<li>Improved separation of concerns as now the doIt method is only concerned with orchestration.</li>
+<li>Improved testability as each of the three core business function methods can be tested on its own without the need for mocks.</li>
+</ul>
+<p>However, some drawbacks remain:</p>
+<ul>
+<li>XyzBusSvc&rsquo;s main doIt method has a direct dependence on the three core business logic methods and all four methods are in the same module/class/file.  This means that it is harder to have these methods independently implemented by different developers.  In particular, source version management merge conflicts can arise if the methods are independently developed.  This may not be a problem for a relatively simple service but can be significant for a complex service.</li>
+<li>XyzBusSvc has an avoidable semantic dependence on AbcDao.  The business service class is semantically coupled to the DAO interface because it is aware of the name of the interface and the names of the abstract data access methods it needs to call.  In addition, if the AbcDao interface contained a method (e.g., listOverdueAbcs) that is used by a use case interactor (business service) other than XyzBusSvc, then, because XyzBusSvc depends on the entire DAO interface, it indirectly depends on changes to code it has no interest in.</li>
+</ul>
+<h3 id="function-oriented-decomposition">Function-oriented decomposition</h3>
+<p>A function-oriented decomposition takes the above object-oriented decomposition one step further:</p>
+<ul>
+<li>There is a separate <em>stereotype function</em> for each method in the previous object-oriented decomposition.  A <em><strong>stereotype function</strong></em> is produced in a module (file) that implements one of the stereotypes in the function-oriented architecture stereotype model.</li>
+<li>Each individual stereotype function lives in its own file/module/class/interface/type (depending on the programming language).</li>
+<li>The main service function (the service flow) depends only on general functional interfaces and knows nothing about specific classes/interfaces that implement the various other functions.  This is key to avoid coupling.</li>
+</ul>
+<p><img src="https://pvillela.github.io/blog/images/foa/Call_Stack_Functional.png" alt="BROKEN_LINK"></p>
+<p>The implications of (a) dependence on general functional interfaces versus specific named interfaces and (b) separate functions with more files versus grouped functions with fewer files are:</p>
+<ul>
+<li>By only using general functional interfaces, the function-oriented decomposition avoids the kind of semantic dependence found in an object-oriented decomposition, where a business service (business case interactor) semantically depends on the data access object.</li>
+<li>For a relatively simple business service (use case interactor) like the above XyzBusSvc, if one developer is responsible for coding all the methods in the business service, then having fewer files would be advantageous.  However, for a complex business service, with potentially dozens of methods, having them all in one file makes it harder to divide the work among multiple developers as they would all be working on the same file and source code merge conflicts would be likely.  This can be mitigated by creating sub-services (sub-interactors), but the &ldquo;one stereotype function per file&rdquo; approach is simpler and more flexible for work assignment and change control.</li>
+<li>Importantly, for a complex business service, the physical separation of the orchestration logic (XyzSfl or XyzBusSvc.doIt) from the core business functions is especially beneficial as the high-level orchestration logic may be assigned to a different developer role (in terms of skill and seniority) than the lower-level core business logic.</li>
+<li>For a data access object, one would typically have the same developer responsible for all its methods, so having fewer files would be advantageous.  When each data access function lives in a separate file/module/class, common configuration logic (e.g., assigning a database connection) needs to be repeated for each function.  This, however, is typically a one-liner, so it doesn&rsquo;t weigh heavily.</li>
+<li>A similar consideration to the above may apply for business functions, though less likely as different business functions are less likely to share configuration parameters.</li>
+<li>Having each stereotype function in a separate file provides better visibility to the scope of work and makes it easier to estimate, assign, work on, and track the status of work units.
+<ul>
+<li>As noted earlier, work assignment and source control are easier, and merge conflicts are avoided when each functional component lives in a separate file.</li>
+<li>A Kanban board for an FOA decomposition is simple, clear, and explicit.  When using an object-oriented decomposition, one could track individual methods on the Kanban board but there are dependencies, as discussed above, among methods in the same class.</li>
+</ul>
+</li>
+</ul>
+<p>Overall, as demonstrated by large projects using the function-oriented architecture, the advantages of having each function in a separate file usually outweigh the disadvantages, especially for complex services.</p>
+<h2 id="grouping-pragmatics-and-coupling-cohesiveness-trade-offs">Grouping pragmatics and coupling-cohesiveness trade-offs</h2>
+<p>Coupling and cohesiveness of modules cannot necessarily be both optimised independently.  It can be advantageous to trade-off a little less coupling for a little more cohesiveness.</p>
+<p>This may be accomplished by grouping into one file multiple stereotype instances that are logically related.  For example, data access functions associated with the same entity might be grouped together, especially as they share similar configuration information.</p>
+<p>By grouping a set of stereotypes into a file, there may a higher potential for merge conflicts.  However, when the grouping involves stereotype instances that would naturally be assigned to a single developer, that concern is removed.</p>
+<p>The possible advantage of such a grouping is the increased cohesiveness and reduction of cognitive load or noise resulting from the reduction of the number of files.</p>
+<h2 id="coupling-and-code-navigability-trade-offs">Coupling and code navigability trade-offs</h2>
+<p>The function-oriented architecture style&rsquo;s use of general function interfaces (instead of more traditional object-oriented interfaces with multiple methods) can make it harder to navigate from a flow that uses a stereotype instance to the stereotype&rsquo;s implementation.</p>
+<p>To mitigate that inconvenience without entirely giving-up the decoupling advantages previously discussed, the following techniques can be used.  Each has its trade-offs:</p>
+<ol>
+<li>
+<p><strong>Naming of the variables representing stereotype dependencies</strong></p>
+<p>Simply name each variable representing a stereotype dependency with the name of the stereotype instance, possibly changing the case of the first character to conform with language requirements or conventions.</p>
+<p>For example, in Kotlin, a dependency on a stereotype instance <code>FooBf</code> that produces a function of type <code>(Int) -&gt; String</code> would appear as <code>val fooBf: (Int) -&gt; String</code>.</p>
+<p>This allows one to find the module implementing the dependency using the IDE&rsquo;s search capability.</p>
+<p>This approach works well enough and has been successfully used on large projects.  The key drawback of this approach is that when the dependency&rsquo;s type name is changed via refactoring then the variable name needs to be adjusted manually. If the variable name is not adjusted, the code still works but the ability to navigate from the variable to the stereotype implementation is gone.</p>
+</li>
+<li>
+<p><strong>Dependence on functional interfaces with concrete methods</strong></p>
+<p>In JVM languages like Kotlin and Scala, where interfaces may have concrete methods, a stereotype instance may be implemented as an interface with a concrete method that implements the desired functional interface (e.g., <code>invoke</code> in Kotlin or <code>apply</code> in Scala).  To facilitate navigation, a flow that depends on another stereotype instance may have a variable with the type of the interface that defines the instance.</p>
+<p>For example, in Kotlin, a dependency on a stereotype instance <code>FooBf</code> that produces a function of type <code>(Int) -&gt; String</code> would appear as <code>val fooBf: FooBf</code> instead of <code>val fooBf: (Int) -&gt; String</code>.</p>
+<p>In this case, the name of the variable is immaterial as the navigation is directly provided by the name of the interface that defines the stereotype instance of the dependency.  With this approach, navigation is straightforward and resilient to name refactoring, but the flow that holds the variable is directly dependent on the implementation of the other stereotype.</p>
+<p>This may still be OK, provided that: (a) the flow only needs to ever access a single implementation of the dependency (e.g., there is no need to support variants of the same DAF with implementations for different databases) and (b) there is no need to unit test the flow in isolation.  If (b) is not true then mocking the dependency would be tricky.  One of the advantages of the function-oriented architecture style is that mocks are normally not needed and, when used, should be trivial to implement.</p>
+</li>
+<li>
+<p><strong>Dependence on type aliases</strong></p>
+<p>This is a middle ground between the two above approaches and may be the best policy for most projects.  This technique, which can be used with languages that support type aliases (e.g., Kotlin, Scala, Go, TypeScript, Rust), works as follows:</p>
+<ul>
+<li>A type alias is defined for the general function interface implemented by each stereotype.</li>
+<li>The type alias should be named like the stereotype instance but with a suffix.  For example, in Go, for a stereotype instance called <code>FooBf</code> that produces a general function of type <code>func(int) string</code>, the type alias could be <code>type FooBfT = func(int) string</code>.</li>
+<li>The type alias can be used instead of the corresponding general function interface by other stereotype instances that depend on that general interface.</li>
+<li>The type alias must be used in the file that implements the dependency stereotype instance to ensure that the type alias corresponds to the actually implemented general function interface.</li>
+<li>In most cases, the type alias should be defined in the file that implements the dependency stereotype instance.  This promotes higher cohesiveness.  There is no need to worry that the flow that depends on the type alias would end-up depending on the dependency stereotype implementation.  Even though the type alias and the implementation may be in the same file, the flow need not have any knowledge of the implementation.</li>
+<li>For stereotype instances that require multiple implementations in different technologies (e.g., a DAF that needs to be implemented for two different databases), the type alias should not be placed in any of the technology-specific implementation files.</li>
+<li>By searching in an IDE for the type alias minus its suffix, the implementation file can be easily found, thus providing navigability without coupling.  When the type alias is defined in the same file as the dependency stereotype instance, by looking-up the definition of the type alias one would land directly on the dependency stereotype instance file.</li>
+</ul>
+</li>
+</ol>
+<h2 id="function-flow-pattern">Function flow pattern</h2>
+<h3 id="sample-flow-diagram">Sample flow diagram</h3>
+<h3 id="sample-flow-code">Sample flow code</h3>
+<h3 id="flow-composition">Flow composition</h3>
+<h3 id="mapping-of-functional-to-technical-design">Mapping of functional to technical design</h3>
+<h2 id="module-stereotypes">Module stereotypes</h2>
+<h3 id="adapters">Adapters</h3>
+<h2 id="levels-of-decoupling">Levels of decoupling</h2>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="mapping-to-clean-architecture">Mapping to Clean Architecture</h2>
+<h2 id="benefits">Benefits</h2>
+<h2 id="programming-language-requirements">Programming language requirements</h2>
+<p>FOA can be successfully practised with pretty much any modern programming language.  However, when using languages with support for both methods and top-level functions (Kotlin, Scala, Go, TypeScript, JavaScript, C++, etc.), the coding idioms associated with FOA are easier to express and there is a lower cognitive load on developers as compared to languages that do not support top-level functions.</p>
+<h2 id="testability">Testability</h2>
+<p>Component or unit testing of function-oriented architecture software components is discussed in this section.</p>
+<p>An important aspect of the function-oriented architecture is that the stereotypes that interact with the runtime platform (DAFs, SCs, and EPs) are, by design, <a href="https://martinfowler.com/bliki/HumbleObject.html">humble objects</a>, i.e., objects that are so simple that there is little or no logic in them for unit testing.</p>
+<h3 id="business-functions-bfs">Business functions (BFs)</h3>
+<h3 id="data-access-functions-dafs">Data access functions (DAFs)</h3>
+<h3 id="service-clients-scs">Service clients (SCs)</h3>
+<h3 id="event-publishers-eps">Event publishers (EPs)</h3>
+<h3 id="supporting-functions-sups">Supporting functions (SUPs)</h3>
+<h3 id="flows-fls-and-service-flows-sfls">Flows (FLs) and service flows (SFLs)</h3>
+<h2 id="project-management-implications">Project management implications</h2>
+<h2 id="methodology">Methodology</h2>
+<h3 id="use-case-realisation">Use case realisation</h3>
+<h3 id="service-endpoint-function-inventory">Service endpoint function inventory</h3>
+<h3 id="design-with-code">Design with code</h3>
+<p>, and to design for this kind of structure using code.</p>
+<h2 id="estimation">Estimation</h2>
+<h2 id="supporting-frameworks">Supporting frameworks</h2>
+<h3 id="type-safe-dependency-injection">Type-safe dependency injection</h3>
+<h3 id="type-safe-configuration">Type-safe configuration</h3>
+<h3 id="other">Other</h3>
+<h2 id="microservice-project-package-class-and-file-naming-standards">Microservice Project, Package, Class and File Naming Standards</h2>
+<h2 id="miscellaneous-microservice-architecture-considerations">Miscellaneous microservice architecture considerations</h2>
+<h3 id="desirable-traits">Desirable traits</h3>
+<h3 id="microservices-scope">Microservices scope</h3>
+<h3 id="event-standards-and-governance">Event standards and governance</h3>
+<h3 id="event-sourcing-implementation">Event sourcing implementation</h3>
+<h3 id="reactive">Reactive</h3>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://monkey.org/~marius/funsrv.pdf">Your Server as a Function</a>, by Marius Eriksen (2013)</li>
+<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">The Clean Architecture</a>, By Robert C. Martin (2012)</li>
+<li><a href="https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/">Clean Architecture: A Craftsman&rsquo;s Guide to Software Structure and Design</a>, by Robert C. Martin (2017)</li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures">Common web application architectures</a>, Microsoft (2020)</li>
+</ul>
+
+</div>
+
+        <footer class="post-footer clearfix"><div class="share">
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a href="https://pvillela.github.io/blog">Paulo Villela</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#" aria-label="Back to Top">
+                        <i class="fa fa-angle-up" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span style="color: white;">Copyright &copy; 2021 Paulo Villela - All rights reserved</span>
+                    <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://pvillela.github.io/blogjs/jquery-1.11.3.min.js"></script>
+        <script src="https://pvillela.github.io/blogjs/jquery.fitvids.js"></script>
+        <script src="https://pvillela.github.io/blogjs/scripts.js"></script>
+    </body>
+</html>
+
