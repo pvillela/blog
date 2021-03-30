@@ -10,19 +10,19 @@
     <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Function-Oriented Architecture (this is a work in progress)</title>
-      <link>https://pvillela.github.io/blog/2021/function_oriented_architecture/</link>
+      <link>https://pvillela.github.io/blog/2021/function-oriented-architecture/</link>
       <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/2021/function_oriented_architecture/</guid>
+      <guid>https://pvillela.github.io/blog/2021/function-oriented-architecture/</guid>
       <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
     </item>
     
     <item>
       <title>Historical Comments on Microservices: 2015-2017</title>
-      <link>https://pvillela.github.io/blog/2021/historical_comments_on_microservices_2015-2017/</link>
+      <link>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</link>
       <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/2021/historical_comments_on_microservices_2015-2017/</guid>
+      <guid>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</guid>
       <description>&lt;h1 id=&#34;historical-comments-on-microservices-2015-2017&#34;&gt;Historical Comments on Microservices: 2015-2017&lt;/h1&gt;
 &lt;p&gt;These are comments on microservices I made between 2015 and 2017.  Some of the content still holds, some of it I no longer agree with.&lt;/p&gt;</description>
     </item>

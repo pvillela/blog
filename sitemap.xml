@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://pvillela.github.io/blog/2021/function_oriented_architecture/</loc>
+    <loc>https://pvillela.github.io/blog/2021/function-oriented-architecture/</loc>
     <lastmod>2021-03-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/</loc>
@@ -11,7 +11,7 @@
     <loc>https://pvillela.github.io/blog/post/</loc>
     <lastmod>2021-03-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/2021/historical_comments_on_microservices_2015-2017/</loc>
+    <loc>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</loc>
     <lastmod>2021-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/2021/why-build-microservices-with-kotlin-kafka-and-kubernetes/</loc>
