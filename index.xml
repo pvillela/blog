@@ -7,7 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Paulo Villela - All rights reserved</copyright>
-    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Simple and Resilient Architecture for Secure Signing of JWT Tokens</title>
+      <link>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</link>
+      <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</guid>
+      <description>This article describes an architecture for the signing of JWT tokens and how the solution fares when portions of it are compromised.
+Elements These are the core concepts and components of the solution:
+  Signature key &amp;ndash; a randomly generated string or byte array of appropriate length.
+  Signature key validity periodicity &amp;ndash; a defined sequence of time periods during which a signature key is valid. Examples:
+ One hour starting at the top of the hour.</description>
+    </item>
+    
     <item>
       <title>Function-Oriented Architecture (this is a work in progress)</title>
       <link>https://pvillela.github.io/blog/2021/function-oriented-architecture/</link>
@@ -18,12 +31,12 @@
     </item>
     
     <item>
-      <title>Historical Comments on Microservices: 2015-2017</title>
+      <title>Past Comments on Microservices: 2015-2017</title>
       <link>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</link>
       <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</guid>
-      <description>&lt;h1 id=&#34;historical-comments-on-microservices-2015-2017&#34;&gt;Historical Comments on Microservices: 2015-2017&lt;/h1&gt;
+      <description>&lt;h1 id=&#34;past-comments-on-microservices-2015-2017&#34;&gt;Past Comments on Microservices: 2015-2017&lt;/h1&gt;
 &lt;p&gt;These are comments on microservices I made between 2015 and 2017.  Some of the content still holds, some of it I no longer agree with.&lt;/p&gt;</description>
     </item>
     
