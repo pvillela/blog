@@ -6,9 +6,7 @@
         <title>Simple and Resilient Architecture for Secure Signing of JWT Tokens &middot; </title>
         <meta name="description" content="This article describes an architecture for the signing of JWT tokens and how the solution fares when certain parts are compromised.
 Elements These are the core concepts and components of the solution:
-  Signature key &ndash; a randomly generated string or byte array of appropriate length.
-  Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid. Examples:
- One hour starting at the top of the hour.">
+ Signature key &ndash; a randomly generated string or byte array of appropriate length. Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid. Examples:  One hour starting at the top of the hour.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
         <meta name="generator" content="Hugo 0.82.0" />
@@ -17,9 +15,7 @@ Elements These are the core concepts and components of the solution:
         <meta property="og:title" content="Simple and Resilient Architecture for Secure Signing of JWT Tokens">
 <meta property="og:description" content="This article describes an architecture for the signing of JWT tokens and how the solution fares when certain parts are compromised.
 Elements These are the core concepts and components of the solution:
-  Signature key &ndash; a randomly generated string or byte array of appropriate length.
-  Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid. Examples:
- One hour starting at the top of the hour.">
+ Signature key &ndash; a randomly generated string or byte array of appropriate length. Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid. Examples:  One hour starting at the top of the hour.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/">
         <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/site.css">
@@ -112,39 +108,26 @@ Elements These are the core concepts and components of the solution:
 <h2 id="elements">Elements</h2>
 <p>These are the core concepts and components of the solution:</p>
 <ul>
-<li>
-<p>Signature key &ndash; a randomly generated string or byte array of appropriate length.</p>
-</li>
-<li>
-<p>Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid.  Examples:</p>
+<li>Signature key &ndash; a randomly generated string or byte array of appropriate length.</li>
+<li>Signature key validity periodicity &ndash; a defined sequence of time periods during which a signature key is valid.  Examples:
 <ul>
 <li>One hour starting at the top of the hour.</li>
 <li>15 minutes starting at minutes 7, 22, 37, 52, etc.</li>
 </ul>
 </li>
-<li>
-<p>Current signature key &ndash; the signature key generated for the current key validity period.</p>
-</li>
-<li>
-<p>Valid signature keys &ndash; at any point in time, messages signed with any of the following keys will be accepted:</p>
+<li>Current signature key &ndash; the signature key generated for the current key validity period.</li>
+<li>Valid signature keys &ndash; at any point in time, messages signed with any of the following keys will be accepted:
 <ul>
 <li>Previous valid key &ndash; the valid signature key for the previous key validity period.</li>
 <li>Current valid key &ndash; the valid signature key for the current key validity period.  Messages signed during the current validity period must be signed with this key.</li>
-<li>Next valid key &ndash; the valid signature key for the next key validity period.</li>
+<li>Next valid key &ndash; the valid signature key for the next key validity period.
+By having 3 valid keys, the signature checking mechanism can tolerate short latency and clock synchronisation differences.</li>
 </ul>
-<p>By having 3 valid keys, the signature checking mechanism can tolerate short latency and clock synchronisation differences.</p>
 </li>
-<li>
-<p>Signature key generation service &ndash; a clustered service that generates signature keys with a predetermined life duration as described above.  The instances in this cluster share a database, ideally 100% in-memory, that can only be accessed by them.  This service returns the 3 valid signature keys in effect at the time it is called.</p>
-</li>
-<li>
-<p>Signing service &ndash; a service that signs messages using the current valid key obtained periodically from the signature key generation service.  Such a service may do other things and may also perform signature verification (see below).</p>
-</li>
-<li>
-<p>Signature verification service &ndash; a service that verifies signed messages using the 3 valid keys obtained periodically from the signature key generation service.  Such a service may do other things and may also perform signature signing (see above).</p>
-</li>
-<li>
-<p>Authentication database</p>
+<li>Signature key generation service &ndash; a clustered service that generates signature keys with a predetermined life duration as described above.  The instances in this cluster share a database, ideally 100% in-memory, that can only be accessed by them.  This service returns the 3 valid signature keys in effect at the time it is called.</li>
+<li>Signing service &ndash; a service that signs messages using the current valid key obtained periodically from the signature key generation service.  Such a service may do other things and may also perform signature verification (see below).</li>
+<li>Signature verification service &ndash; a service that verifies signed messages using the 3 valid keys obtained periodically from the signature key generation service.  Such a service may do other things and may also perform signature signing (see above).</li>
+<li>Authentication database
 <ul>
 <li>username &ndash; string that uniquely identifies the user</li>
 <li>salt &ndash; a random salt value for the user</li>
