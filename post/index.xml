@@ -14,7 +14,7 @@
       <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</guid>
-      <description>This article describes an architecture for the signing of JWT tokens and how the solution fares when portions of it are compromised.
+      <description>This article describes an architecture for the signing of JWT tokens and how the solution fares when certain parts are compromised.
 Elements These are the core concepts and components of the solution:
   Signature key &amp;ndash; a randomly generated string or byte array of appropriate length.
   Signature key validity periodicity &amp;ndash; a defined sequence of time periods during which a signature key is valid. Examples:
