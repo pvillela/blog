@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Persistence Wrapper in Golang &middot; </title>
+        <meta name="description" content="Persistence Wrapper in Golang When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities&#39; natural attributes. For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field. This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.82.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Persistence Wrapper in Golang">
+<meta property="og:description" content="Persistence Wrapper in Golang When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities&#39; natural attributes. For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field. This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pvillela.github.io/blog/2021/persistence-wrapper-in-golang/">
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/site.css">
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/syntax.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/css/my_style_mods.css">
+
+        
+        
+        
+        
+        
+
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a href="https://pvillela.github.io/blog/">Paulo Villela</a>
+                            </h1>
+                        
+                        
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" aria-label="Github" href="https://github.com/pvillela" rel="me">
+                                <i class="fa fa-github-alt" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" aria-label="LinkedIn" href="https://linkedin.com/in/pvillela/" rel="me">
+                                <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/contact/">Contact</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/about/">About</a>
+    </li>
+
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Persistence Wrapper in Golang</h1>
+    
+    <p class="post-date post-line">
+        <span>Published <time datetime="2021-04-04" itemprop="datePublished">Sun, Apr 4, 2021</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="#" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+    
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <h1 id="persistence-wrapper-in-golang">Persistence Wrapper in Golang</h1>
+<p>When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities' natural attributes.  For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field.  This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.</p>
+<h2 id="approaches">Approaches</h2>
+<p>There are several general ways to address the need to handle such additional record context information required for persistence purposes.</p>
+<ol>
+<li>Define a <code>RecCtx</code> data type that encapsulates the additional persistence context information.  Data access functions (<em><strong>DAFs</strong></em>) use this data type as a parameter and/or return types, together with normal domain entity data types.</li>
+<li>Define a concrete data structure Pw[T] (using Go generics notation) that encapsulates both the persistence record context information and the domain entity type T.  DAFs use this type as parameter and/or return types, instead of the normal domain entity data types.</li>
+<li>Define a wrapper interface type Pw[T] that encapsulates both the persistence record context information and the domain entity type T.  This is similar to 3 above but uses an interface instead of a struct.</li>
+<li>For each domain entity type Xyz, define an interface IXyz that is implemented by the domain entity type and define an augmented concrete type that also implements the interface IXyz and contains both the domain entity attributes and the persistence record context information.  DAFs use this type as parameter and/or return types, instead of the normal domain entity data types.</li>
+<li>(This approach is not applicable to Go but is used in JVM languages.) Use bytecode weaving techniques to add persistence capabilities to existing domain model classes.  DAFs use the normal entity data types (augmented behind the scenes by bytecode weaving) as parameter and/or return types.</li>
+<li>Include persistence context fields in the domain entity types.  DAFs use the domain entity types directly and business functions simply ignore the persistence information in the domain entity types.</li>
+</ol>
+<p>This article will focus on approaches 1 and 2.  The other approaches will be briefly discussed at the end.</p>
+<p>Approaches 1-4 are particularly important for systems where the same entity type may be accessed using multiple database technologies (polyglot persistence).  For example, one service may persist entity Xyz using Cosmos DB and another service may use MS SQL Server to store the same entity.  Approaches 5 and 6 cannot cope effectively with such polyglot persistence use cases.</p>
+<h2 id="approach-1">Approach 1</h2>
+<p>The use of approach 1 in Go looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// RecCtx is a type that holds platform-specific database record context information,
+</span><span style="color:#75715e">// e.g., an optimistic locking token and/or a record ID.  DAFs may accept this type as
+</span><span style="color:#75715e">// a parameter or return this type, together with domain entity types.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RecCtx</span> <span style="color:#66d9ef">interface</span>{}
+
+<span style="color:#75715e">// Example A1 -- DAF signature
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">article</span> <span style="color:#a6e22e">Article</span>, <span style="color:#a6e22e">rc</span> <span style="color:#a6e22e">RecCtx</span>) (<span style="color:#a6e22e">Article</span>, <span style="color:#a6e22e">RecCTx</span>, <span style="color:#66d9ef">error</span>)
+
+<span style="color:#75715e">// Example A2 -- usage
+</span><span style="color:#75715e">// With separation of entity and RecCtx
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ArticleReadDaf</span>(<span style="color:#a6e22e">name</span>)
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span> }
+<span style="color:#a6e22e">article</span> = <span style="color:#a6e22e">SomeBusinessFunctionBf</span>(<span style="color:#a6e22e">article</span>)
+<span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>)
+</code></pre></div><p>This approach promotes code that is clear and reasonably concise.</p>
+<h2 id="approach-2">Approach 2</h2>
+<p>This approach uses the above described type <code>RecCtx</code> within a struct.  The use of approach 2 in Go looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// PW wraps a domain entity and RecCtx together.  It can be returned or accepted by a 
+</span><span style="color:#75715e">// DAF as an alternative to using RecCtx and the entity type separately.  This is most
+</span><span style="color:#75715e">// useful when there are multiple entity objects involved as inputs or outputs of a DAF.
+</span><span style="color:#75715e">// The type parameter T can either be a domain entity type or the pointer type thereof,
+</span><span style="color:#75715e">// depending on whether the DAF returns / receives by value or by pointer.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">any</span>] <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">RecCtx</span>
+    <span style="color:#a6e22e">Entity</span> <span style="color:#a6e22e">T</span>
+}
+
+<span style="color:#75715e">// Helper method
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>]) <span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">T</span>) <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>] {
+    <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Entity</span> = <span style="color:#a6e22e">t</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
+}
+
+<span style="color:#75715e">// Example B1 -- prefer the style of Example 1 above
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">pwArticle</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Article</span>]) (<span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Article</span>], <span style="color:#66d9ef">error</span>)
+
+<span style="color:#75715e">// Example B2 -- usage where separating entity and RecCtx (see A2 above) would be 
+</span><span style="color:#75715e">// preferable
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">pwArticle</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ArticleReadDaf</span>(<span style="color:#a6e22e">name</span>)
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span> }
+<span style="color:#a6e22e">article</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pwArticle</span>.<span style="color:#a6e22e">Entity</span>
+<span style="color:#a6e22e">article</span> = <span style="color:#a6e22e">SomeBusinessFunctionBf</span>(<span style="color:#a6e22e">article</span>)
+<span style="color:#a6e22e">pwArticle</span> = <span style="color:#a6e22e">pwArticle</span>.<span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">article</span>)
+<span style="color:#a6e22e">pwArticle</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">pwArticle</span>)
+
+<span style="color:#75715e">// Example B3 -- here it makes sense to use Pw
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ReadRecentUsagesDaf</span>() ([]<span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Usage</span>], <span style="color:#66d9ef">error</span>)
+</code></pre></div><p>As the examples show, code using this approach can be more verbose.  This approach makes the most sense in situations where multiple records are returned.</p>
+<h4 id="side-note-on-value-versus-pointer-semantics"><em>Side note on value versus pointer semantics</em></h4>
+<p><em>Our philosophy is to define entity types that are relatively cheap to pass by value and to use value semantics for all function parameters and method receivers.  Thus, most of our functions do not mutate their receivers or parameters.  This makes for code that is easier to understand and where mutations are localised to explicit assignments.  Not exactly pure functional programming, but a practical idiom for an imperative language like Go.  It also reduces garbage collection pressure, often resulting in faster execution.</em></p>
+<p><em>In most cases, this is achievable.  In cases where the entity type has fields that can be large strings, we can either use slice fields or <code>*string</code> fields as alternatives, and thus keep the cost of passing the entity by value low.  There is no need to worry about slice and map fields as Go already takes care of making them cheap to copy.  In cases where there is no practical way to design the entity so that passing it by value is cheap, we can fall back on using pointers, e.g., a DAF can return a pointer and the type T in Pw[T] can be a pointer type.</em></p>
+<h2 id="other-approaches-considered">Other approaches considered</h2>
+<h4 id="approach-3">Approach 3</h4>
+<p>This alternative approach looks like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">any</span>] <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Entity</span>() <span style="color:#a6e22e">T</span>       <span style="color:#75715e">// equivalent to the Entity field in the above struct
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">T</span>) <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>]  <span style="color:#75715e">// creates a new instance with the same RecCtx and t as the T part
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>This alternative was tried and abandoned because:</p>
+<ul>
+<li>The resulting code at the point of usage is no cleaner than when using the struct version of Pw[T].</li>
+<li>The interface has to be implemented by some struct type S0 anyway and the code required to implement the required methods on S0 to implement the interface would be no easier than the code required to produce the struct version of Pw[T] from S0.</li>
+</ul>
+<h4 id="approach-4">Approach 4</h4>
+<p>This approach is attractive in languages like Kotlin and Scala that support interfaces with properties and clean notation for interface overrides with minimal coding.  In the case of Go, it makes the code more unpleasant, with a proliferation of &ldquo;entity.Field()&rdquo; calls instead of &ldquo;entity.Field&rdquo;.  In addition, copy methods have to be implemented for these interfaces and the business functions have to use the interface copy methods as well as the field methods.  In summary , approaches 1 and 2 are simpler in Go (and possibly in Kotlin and Scala too).</p>
+<h4 id="approach-5">Approach 5</h4>
+<p>This approach is not applicable in Go.  For people who like ORMs (the author not among them), this approach can work fine, but there is quite a bit of bytecode manipulation and other &ldquo;magic&rdquo; involved.  This approach does not work well for systems where the same entity type may be accessed using multiple database technologies.</p>
+<h4 id="approach-6">Approach 6</h4>
+<p>This quick-and-dirty approach ignores separation of concerns &ndash; it conflates database and domain model concerns into a single data type.  This approach should be avoided for large, complex systems, but it can be effective for simple services/applications.  This approach does not work well for systems where the same entity type may be accessed using multiple database technologies.</p>
+
+</div>
+
+        <footer class="post-footer clearfix"><div class="share">
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a href="https://pvillela.github.io/blog/">Paulo Villela</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#" aria-label="Back to Top">
+                        <i class="fa fa-angle-up" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span style="color: white;">Copyright &copy; 2021 Paulo Villela - All rights reserved</span>
+                    <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://pvillela.github.io/blog/js/jquery-1.11.3.min.js"></script>
+        <script src="https://pvillela.github.io/blog/js/jquery.fitvids.js"></script>
+        <script src="https://pvillela.github.io/blog/js/scripts.js"></script>
+    </body>
+</html>
+

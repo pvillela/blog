@@ -9,12 +9,21 @@
     <copyright>Paulo Villela - All rights reserved</copyright>
     <lastBuildDate>Sun, 04 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Simple and Resilient Architecture for Secure Signing of JWT Tokens</title>
-      <link>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</link>
+      <title>Persistence Wrapper in Golang</title>
+      <link>https://pvillela.github.io/blog/2021/persistence-wrapper-in-golang/</link>
       <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</guid>
-      <description>This article describes an architecture for the signing of JWT tokens and how the solution fares when certain parts are compromised.
+      <guid>https://pvillela.github.io/blog/2021/persistence-wrapper-in-golang/</guid>
+      <description>Persistence Wrapper in Golang When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities&#39; natural attributes. For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field. This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.</description>
+    </item>
+    
+    <item>
+      <title>Simple and Resilient Architecture for Signing of JWT Tokens</title>
+      <link>https://pvillela.github.io/blog/2021/simple-architecture-for-signing-of-jwt-tokens/</link>
+      <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2021/simple-architecture-for-signing-of-jwt-tokens/</guid>
+      <description>This article describes a simple and resilient architecture for the signing of JWT tokens, as well as discusses how the solution fares when certain components are compromised.
 Elements These are the core concepts and components of the solution:
  Signature key &amp;ndash; a randomly generated string or byte array of appropriate length. Signature key validity periodicity &amp;ndash; a defined sequence of time periods during which a signature key is valid. Examples:  One hour starting at the top of the hour.</description>
     </item>

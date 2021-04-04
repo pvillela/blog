@@ -5,10 +5,13 @@
     <loc>https://pvillela.github.io/blog/</loc>
     <lastmod>2021-04-04T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://pvillela.github.io/blog/2021/persistence-wrapper-in-golang/</loc>
+    <lastmod>2021-04-04T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://pvillela.github.io/blog/post/</loc>
     <lastmod>2021-04-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://pvillela.github.io/blog/2021/simple-and-resilient-architecture-for-secure-signing-of-jwt-tokens/</loc>
+    <loc>https://pvillela.github.io/blog/2021/simple-architecture-for-signing-of-jwt-tokens/</loc>
     <lastmod>2021-04-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://pvillela.github.io/blog/2021/function-oriented-architecture/</loc>
