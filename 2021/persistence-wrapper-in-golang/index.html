@@ -116,65 +116,131 @@
 <p>Approaches 1-4 are particularly important for systems where the same entity type may be accessed using multiple database technologies (polyglot persistence).  For example, one service may persist entity Xyz using Cosmos DB and another service may use MS SQL Server to store the same entity.  Approaches 5 and 6 cannot cope effectively with such polyglot persistence use cases.</p>
 <h2 id="approach-1">Approach 1</h2>
 <p>The use of approach 1 in Go looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// RecCtx is a type that holds platform-specific database record context information,
-</span><span style="color:#75715e">// e.g., an optimistic locking token and/or a record ID.  DAFs may accept this type as
-</span><span style="color:#75715e">// a parameter or return this type, together with domain entity types.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">RecCtx</span> <span style="color:#66d9ef">interface</span>{}
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// RecCtx is a type that holds platform-specific database record context information,
+</span><span style="color:#408080;font-style:italic">// e.g., an optimistic locking token and/or a record ID.  DAFs may accept this type as
+</span><span style="color:#408080;font-style:italic">// a parameter or return this type, together with domain entity types.
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">type</span> RecCtx <span style="color:#008000;font-weight:bold">interface</span>{}
 
-<span style="color:#75715e">// Example A1 -- DAF signature
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">article</span> <span style="color:#a6e22e">Article</span>, <span style="color:#a6e22e">rc</span> <span style="color:#a6e22e">RecCtx</span>) (<span style="color:#a6e22e">Article</span>, <span style="color:#a6e22e">RecCTx</span>, <span style="color:#66d9ef">error</span>)
+<span style="color:#408080;font-style:italic">// Example A1 -- DAF signature
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">func</span> <span style="color:#00f">ArticleUpdateDaf</span>(article Article, rc RecCtx) (Article, RecCTx, <span style="color:#b00040">error</span>)
 
-<span style="color:#75715e">// Example A2 -- usage
-</span><span style="color:#75715e">// With separation of entity and RecCtx
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ArticleReadDaf</span>(<span style="color:#a6e22e">name</span>)
-<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span> }
-<span style="color:#a6e22e">article</span> = <span style="color:#a6e22e">SomeBusinessFunctionBf</span>(<span style="color:#a6e22e">article</span>)
-<span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">article</span>, <span style="color:#a6e22e">recCtx</span>)
-</code></pre></div><p>This approach promotes code that is clear and reasonably concise.</p>
+<span style="color:#408080;font-style:italic">// Example A2 -- usage
+</span><span style="color:#408080;font-style:italic">// With separation of entity and RecCtx
+</span><span style="color:#408080;font-style:italic"></span>article, recCtx, err <span style="color:#666">:=</span> <span style="color:#00f">ArticleReadDaf</span>(name)
+<span style="color:#008000;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#008000;font-weight:bold">nil</span> { <span style="color:#008000;font-weight:bold">return</span> err }
+article = <span style="color:#00f">SomeBusinessFunctionBf</span>(article)
+article, recCtx, err = <span style="color:#00f">ArticleUpdateDaf</span>(article, recCtx)
+</code></pre></td></tr></table>
+</div>
+</div><p>This approach promotes code that is clear and reasonably concise.</p>
 <h2 id="approach-2">Approach 2</h2>
 <p>This approach uses the above described type <code>RecCtx</code> within a struct.  The use of approach 2 in Go looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// PW wraps a domain entity and RecCtx together.  It can be returned or accepted by a 
-</span><span style="color:#75715e">// DAF as an alternative to using RecCtx and the entity type separately.  This is most
-</span><span style="color:#75715e">// useful when there are multiple entity objects involved as inputs or outputs of a DAF.
-</span><span style="color:#75715e">// The type parameter T can either be a domain entity type or the pointer type thereof,
-</span><span style="color:#75715e">// depending on whether the DAF returns / receives by value or by pointer.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">any</span>] <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">RecCtx</span>
-    <span style="color:#a6e22e">Entity</span> <span style="color:#a6e22e">T</span>
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// PW wraps a domain entity and RecCtx together.  It can be returned or accepted by a 
+</span><span style="color:#408080;font-style:italic">// DAF as an alternative to using RecCtx and the entity type separately.  This is most
+</span><span style="color:#408080;font-style:italic">// useful when there are multiple entity objects involved as inputs or outputs of a DAF.
+</span><span style="color:#408080;font-style:italic">// The type parameter T can either be a domain entity type or the pointer type thereof,
+</span><span style="color:#408080;font-style:italic">// depending on whether the DAF returns / receives by value or by pointer.
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">type</span> Pw[T any] <span style="color:#008000;font-weight:bold">struct</span> {
+    RecCtx
+    Entity T
 }
 
-<span style="color:#75715e">// Helper method
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>]) <span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">T</span>) <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>] {
-    <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Entity</span> = <span style="color:#a6e22e">t</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
+<span style="color:#408080;font-style:italic">// Helper method
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">func</span> (s Pw[T]) <span style="color:#00f">Copy</span>(t T) Pw[T] {
+    s.Entity = t
+    <span style="color:#008000;font-weight:bold">return</span> s
 }
 
-<span style="color:#75715e">// Example B1 -- prefer the style of Example 1 above
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">pwArticle</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Article</span>]) (<span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Article</span>], <span style="color:#66d9ef">error</span>)
+<span style="color:#408080;font-style:italic">// Example B1 -- prefer the style of Example 1 above
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">func</span> <span style="color:#00f">ArticleUpdateDaf</span>(pwArticle Pw[Article]) (Pw[Article], <span style="color:#b00040">error</span>)
 
-<span style="color:#75715e">// Example B2 -- usage where separating entity and RecCtx (see A2 above) would be 
-</span><span style="color:#75715e">// preferable
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">pwArticle</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ArticleReadDaf</span>(<span style="color:#a6e22e">name</span>)
-<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span> }
-<span style="color:#a6e22e">article</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pwArticle</span>.<span style="color:#a6e22e">Entity</span>
-<span style="color:#a6e22e">article</span> = <span style="color:#a6e22e">SomeBusinessFunctionBf</span>(<span style="color:#a6e22e">article</span>)
-<span style="color:#a6e22e">pwArticle</span> = <span style="color:#a6e22e">pwArticle</span>.<span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">article</span>)
-<span style="color:#a6e22e">pwArticle</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ArticleUpdateDaf</span>(<span style="color:#a6e22e">pwArticle</span>)
+<span style="color:#408080;font-style:italic">// Example B2 -- usage where separating entity and RecCtx (see A2 above) would be 
+</span><span style="color:#408080;font-style:italic">// preferable
+</span><span style="color:#408080;font-style:italic"></span>pwArticle, err <span style="color:#666">:=</span> <span style="color:#00f">ArticleReadDaf</span>(name)
+<span style="color:#008000;font-weight:bold">if</span> err <span style="color:#666">!=</span> <span style="color:#008000;font-weight:bold">nil</span> { <span style="color:#008000;font-weight:bold">return</span> err }
+article <span style="color:#666">:=</span> pwArticle.Entity
+article = <span style="color:#00f">SomeBusinessFunctionBf</span>(article)
+pwArticle = pwArticle.<span style="color:#00f">Copy</span>(article)
+pwArticle, err = <span style="color:#00f">ArticleUpdateDaf</span>(pwArticle)
 
-<span style="color:#75715e">// Example B3 -- here it makes sense to use Pw
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ReadRecentUsagesDaf</span>() ([]<span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">Usage</span>], <span style="color:#66d9ef">error</span>)
-</code></pre></div><p>As the examples show, code using this approach can be more verbose.  This approach makes the most sense in situations where multiple records are returned.</p>
+<span style="color:#408080;font-style:italic">// Example B3 -- here it makes sense to use Pw
+</span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">func</span> <span style="color:#00f">ReadRecentUsagesDaf</span>() ([]Pw[Usage], <span style="color:#b00040">error</span>)
+</code></pre></td></tr></table>
+</div>
+</div><p>As the examples show, code using this approach can be more verbose.  This approach makes the most sense in situations where multiple records are returned.</p>
 <h4 id="side-note-on-value-versus-pointer-semantics"><em>Side note on value versus pointer semantics</em></h4>
 <p><em>Our philosophy is to define entity types that are relatively cheap to pass by value and to use value semantics for all function parameters and method receivers.  Thus, most of our functions do not mutate their receivers or parameters.  This makes for code that is easier to understand and where mutations are localised to explicit assignments.  Not exactly pure functional programming, but a practical idiom for an imperative language like Go.  It also reduces garbage collection pressure, often resulting in faster execution.</em></p>
 <p><em>In most cases, this is achievable.  In cases where the entity type has fields that can be large strings, we can either use slice fields or <code>*string</code> fields as alternatives, and thus keep the cost of passing the entity by value low.  There is no need to worry about slice and map fields as Go already takes care of making them cheap to copy.  In cases where there is no practical way to design the entity so that passing it by value is cheap, we can fall back on using pointers, e.g., a DAF can return a pointer and the type T in Pw[T] can be a pointer type.</em></p>
 <h2 id="other-approaches-considered">Other approaches considered</h2>
 <h4 id="approach-3">Approach 3</h4>
 <p>This alternative approach looks like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span> <span style="color:#a6e22e">any</span>] <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">Entity</span>() <span style="color:#a6e22e">T</span>       <span style="color:#75715e">// equivalent to the Entity field in the above struct
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Copy</span>(<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">T</span>) <span style="color:#a6e22e">Pw</span>[<span style="color:#a6e22e">T</span>]  <span style="color:#75715e">// creates a new instance with the same RecCtx and t as the T part
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>This alternative was tried and abandoned because:</p>
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">type</span> Pw[T any] <span style="color:#008000;font-weight:bold">interface</span> {
+    <span style="color:#00f">Entity</span>() T       <span style="color:#408080;font-style:italic">// equivalent to the Entity field in the above struct
+</span><span style="color:#408080;font-style:italic"></span>    <span style="color:#00f">Copy</span>(t T) Pw[T]  <span style="color:#408080;font-style:italic">// creates a new instance with the same RecCtx and t as the T part
+</span><span style="color:#408080;font-style:italic"></span>}
+</code></pre></td></tr></table>
+</div>
+</div><p>This alternative was tried and abandoned because:</p>
 <ul>
 <li>The resulting code at the point of usage is no cleaner than when using the struct version of Pw[T].</li>
 <li>The interface has to be implemented by some struct type S0 anyway and the code required to implement the required methods on S0 to implement the interface would be no easier than the code required to produce the struct version of Pw[T] from S0.</li>
