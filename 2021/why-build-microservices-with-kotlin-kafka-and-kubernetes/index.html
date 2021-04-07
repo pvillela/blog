@@ -116,7 +116,7 @@ Why I chose Kotlin, Kafka, and Kubernetes for a mission-critical, high-throughpu
 <h3 id="kafka">Kafka</h3>
 <p>Kafka was an easy choice.  The architecture needed to be event-driven for performance, scalability, and resilience.  We also wanted to leverage an event log to enable independent specialized views of the data/state (CQRS and a data lake).  Kafka is the gold standard for event logs.</p>
 <p>Our decision to use Azure Event Hubs with the Kafka API was based on ease of operation and support.  But it was key that the application services use the Kafka client API so that we could rely on the guarantees provided by Kafka and we could easily migrate to a different Kafka implementation &ndash; there was no cloud provider lock-in for this aspect of the architecture.</p>
-<h3 id="kotlin-a-namekotlina">Kotlin <!-- raw HTML omitted --><!-- raw HTML omitted --></h3>
+<h3 id="kotlin-a-namekotlina">Kotlin <a name="kotlin"></a></h3>
 <p>We could have built the system in C#, Java, TypeScript, or Go.  Key criteria were:</p>
 <ol>
 <li>Expressiveness of the language.</li>
