@@ -29,15 +29,6 @@ Elements These are the core concepts and components of the solution:
     </item>
     
     <item>
-      <title>Function-Oriented Architecture (this is a work in progress)</title>
-      <link>https://pvillela.github.io/blog/2021/function-oriented-architecture/</link>
-      <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://pvillela.github.io/blog/2021/function-oriented-architecture/</guid>
-      <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
-    </item>
-    
-    <item>
       <title>Past Comments on Microservices: 2015-2017</title>
       <link>https://pvillela.github.io/blog/2021/past-comments-on-microservices-2015-2017/</link>
       <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
@@ -48,9 +39,18 @@ Elements These are the core concepts and components of the solution:
     </item>
     
     <item>
+      <title>Function-Oriented Architecture (this is a work in progress)</title>
+      <link>https://pvillela.github.io/blog/2021/function-oriented-architecture/</link>
+      <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2021/function-oriented-architecture/</guid>
+      <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
+    </item>
+    
+    <item>
       <title>Why Build Microservices with Kotlin, Kafka, and Kubernetes</title>
       <link>https://pvillela.github.io/blog/2021/why-build-microservices-with-kotlin-kafka-and-kubernetes/</link>
-      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Feb 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/2021/why-build-microservices-with-kotlin-kafka-and-kubernetes/</guid>
       <description>&lt;h1 id=&#34;why-build-microservices-with-kotlin-kafka-and-kubernetes&#34;&gt;Why Build Microservices with Kotlin, Kafka, and Kubernetes&lt;/h1&gt;

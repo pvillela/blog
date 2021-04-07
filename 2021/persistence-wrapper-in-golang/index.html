@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Persistence Wrapper in Golang &middot; </title>
+        <title>Persistence Wrapper in Golang &middot; Paulo Villela</title>
         <meta name="description" content="Persistence Wrapper in Golang When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities&#39; natural attributes. For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field. This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
@@ -85,14 +85,16 @@
         <header class="post-header">
     <h1 class="post-title" itemprop="name headline">Persistence Wrapper in Golang</h1>
     
-    <p class="post-date post-line">
+    <p class="post-date">
         <span>Published <time datetime="2021-04-04" itemprop="datePublished">Sun, Apr 4, 2021</time></span>
         <span>by</span>
         <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
             <span itemprop="name">
-                <a href="#" itemprop="url" rel="author"></a>
+                <a href="https://pvillela.github.io/blog/page/about" itemprop="url" rel="author">Paulo Villela</a>
             </span>
         </span>
+        <br><br>
+        
     </p>
     
 </header>
@@ -106,7 +108,7 @@
 <p>There are several general ways to address the need to handle such additional record context information required for persistence purposes.</p>
 <ol>
 <li>Define a <code>RecCtx</code> data type that encapsulates the additional persistence context information.  Data access functions (<em><strong>DAFs</strong></em>) use this data type as a parameter and/or return types, together with normal domain entity data types.</li>
-<li>Define a concrete data structure Pw[T] (using Go generics notation) that encapsulates both the persistence record context information and the domain entity type T.  DAFs use this type as parameter and/or return types, instead of the normal domain entity data types.</li>
+<li>Define a concrete data structure Pw[T] (using Go generics notation) that encapsulates both the persistence record context information and the domain entity type T (or its corresponding pointer type).  DAFs use this type as parameter and/or return types, instead of the normal domain entity data types.</li>
 <li>Define a wrapper interface type Pw[T] that encapsulates both the persistence record context information and the domain entity type T.  This is similar to 3 above but uses an interface instead of a struct.</li>
 <li>For each domain entity type Xyz, define an interface IXyz that is implemented by the domain entity type and define an augmented concrete type that also implements the interface IXyz and contains both the domain entity attributes and the persistence record context information.  DAFs use this type as parameter and/or return types, instead of the normal domain entity data types.</li>
 <li>(This approach is not applicable to Go but is used in JVM languages.) Use bytecode weaving techniques to add persistence capabilities to existing domain model classes.  DAFs use the normal entity data types (augmented behind the scenes by bytecode weaving) as parameter and/or return types.</li>
