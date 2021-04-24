@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Paulo Villela - All rights reserved</copyright>
-    <lastBuildDate>Sun, 04 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Notes on Blockchain</title>
+      <link>https://pvillela.github.io/blog/2021/notes-on-blockchain/</link>
+      <pubDate>Sat, 24 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2021/notes-on-blockchain/</guid>
+      <description>Notes on Blockchain A blockchain is essentially a replicated database that consists of:
+ A ledger  The ledger is a database log that is irrefutable and tamper-proof The ledger is replicated and different participants have their own replicas   Rules that govern what entries can be added to the ledger A replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts Views that maintain indices and support efficient queries (rather than force traversal of the log) Rules that govern users&#39; or potential users&#39; access to the data, including but not limited to:  Viewing of data Addition of entries to the ledger Creation of ledger replicas Participation in the replica consensus process   Rules that govern the approval process to grant data access rights and access approval rights to users APIs to provide controlled access to the above capabilities  </description>
+    </item>
+    
     <item>
       <title>Persistence Wrapper in Golang</title>
       <link>https://pvillela.github.io/blog/2021/persistence-wrapper-in-golang/</link>
