@@ -14,9 +14,9 @@
       <pubDate>Sat, 24 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/2021/blockchain-essence/</guid>
-      <description>The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.
-A blockchain is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
- An irrefutable and tamper-proof database log &amp;ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated) Tamper-proof means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be deleted, or modified This doesn&amp;rsquo;t preclude, however, another valid transaction from reversing or adjusting the original transaction &amp;ndash; but the original transaction will always be preserved in the log   The ledger is replicated, with eventual consistency through consensus  Different participants can have their own replicas There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts   Transaction validation rules that govern what entries can be added to the ledger Views that support efficient queries (e.</description>
+      <description>The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with. The references at the end elaborate on the core concepts touched-upon here.
+A blockchain or distributed ledger is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
+ An irrefutable and tamper-proof database log &amp;ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated).</description>
     </item>
     
     <item>

@@ -4,18 +4,18 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>The Essence of Blockchain Technology for IT Practitioners &middot; Paulo Villela</title>
-        <meta name="description" content="The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.
-A blockchain is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
- An irrefutable and tamper-proof database log &ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated) Tamper-proof means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be deleted, or modified This doesn&rsquo;t preclude, however, another valid transaction from reversing or adjusting the original transaction &ndash; but the original transaction will always be preserved in the log   The ledger is replicated, with eventual consistency through consensus  Different participants can have their own replicas There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts   Transaction validation rules that govern what entries can be added to the ledger Views that support efficient queries (e.">
+        <meta name="description" content="The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with. The references at the end elaborate on the core concepts touched-upon here.
+A blockchain or distributed ledger is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
+ An irrefutable and tamper-proof database log &ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated).">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
         <meta name="generator" content="Hugo 0.82.1" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta property="og:title" content="The Essence of Blockchain Technology for IT Practitioners">
-<meta property="og:description" content="The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.
-A blockchain is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
- An irrefutable and tamper-proof database log &ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated) Tamper-proof means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be deleted, or modified This doesn&rsquo;t preclude, however, another valid transaction from reversing or adjusting the original transaction &ndash; but the original transaction will always be preserved in the log   The ledger is replicated, with eventual consistency through consensus  Different participants can have their own replicas There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts   Transaction validation rules that govern what entries can be added to the ledger Views that support efficient queries (e.">
+<meta property="og:description" content="The Essence of Blockchain Technology for IT Practitioners This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with. The references at the end elaborate on the core concepts touched-upon here.
+A blockchain or distributed ledger is essentially a replicated database that consists of the following capabilities. These capabilities are largely common to both public and permissioned (private) blockchains:
+ An irrefutable and tamper-proof database log &ndash; the ledger  Irrefutable means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated).">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://pvillela.github.io/blog/2021/blockchain-essence/">
         <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/site.css">
@@ -107,37 +107,37 @@ A blockchain is essentially a replicated database that consists of the following
     
 
     <h1 id="the-essence-of-blockchain-technology-for-it-practitioners">The Essence of Blockchain Technology for IT Practitioners</h1>
-<p>This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.</p>
-<p>A blockchain is essentially a replicated database that consists of the following capabilities.  These capabilities are largely common to both public and permissioned (private) blockchains:</p>
+<p>This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.  The references at the end elaborate on the core concepts touched-upon here.</p>
+<p>A blockchain or distributed ledger is essentially a replicated database that consists of the following capabilities.  These capabilities are largely common to both public and permissioned (private) blockchains:</p>
 <br>
 <ol>
 <li><strong>An irrefutable and tamper-proof database log &ndash; the ledger</strong>
 <ul>
-<li><em>Irrefutable</em> means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated)</li>
-<li><em>Tamper-proof</em> means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be deleted, or modified</li>
-<li>This doesn&rsquo;t preclude, however, another valid transaction  from reversing or adjusting the original transaction &ndash; but the original transaction will always be preserved in the log</li>
+<li><em>Irrefutable</em> means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be refuted (synonyms: denied, repudiated).</li>
+<li><em>Tamper-proof</em> means that, once a transaction is accepted and there is consensus that it is valid see below), it cannot be deleted, or modified.</li>
+<li>This doesn&rsquo;t preclude, however, another valid transaction  from reversing or adjusting the original transaction &ndash; but the original transaction will always be preserved in the log.</li>
 </ul>
 </li>
 <li><strong>The ledger is replicated, with eventual consistency through consensus</strong>
 <ul>
-<li>Different participants can have their own replicas</li>
-<li>There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts</li>
+<li>There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts.</li>
+<li>Different <em>participants</em> can have their own (one or more) replicas.  <em><strong>Participants</strong></em> are entities that can participate in the replication and consensus processes.</li>
 </ul>
 </li>
 <li><strong>Transaction validation rules</strong> that govern what entries can be added to the ledger</li>
 <li><strong>Views that support efficient queries</strong> (e.g., using indices rather than forcing traversal of the log)</li>
-<li><strong>Rules that govern users' or potential users' access to the data</strong>, including but not limited to:
+<li><strong>Rules that govern participants' and users' access to the data</strong>, including but not limited to:
 <ul>
-<li>Viewing of data</li>
-<li>Addition of entries to the ledger</li>
-<li>Creation of ledger replicas</li>
-<li>Participation in the replica consensus process</li>
+<li>Viewing of data.</li>
+<li>Addition of entries to the ledger.</li>
+<li>Creation of ledger replicas.</li>
+<li>Participation in the replica consensus process.</li>
 </ul>
 </li>
-<li><strong>Rules that govern approval to obtain access</strong>
+<li><strong>Rules that govern approval to grant access for participants and users</strong>
 <ul>
-<li>An approval process to grant the aforementioned data access rights to users</li>
-<li>An approval process to grant approval rights to users (i.e., so that a user can participate in the approval process for other users)</li>
+<li>Approval processes to grant aforementioned data access rights to participants and users.</li>
+<li>Approval processes to grant approval rights to participants and users (i.e., so that a participant or user can participate in the approval process for other participants or users).</li>
 </ul>
 </li>
 <li><strong>APIs to provide controlled access to the above capabilities</strong></li>
@@ -147,6 +147,9 @@ A blockchain is essentially a replicated database that consists of the following
 <p>Capability 4 is present to some extent in all blockchain products, but can vary greatly.  For example, this capability is fairly limited in the case of the Bitcoin blockchain.</p>
 <p>Capabilities 5 and 6 are the key differentiators between permissioned (private) and public blockchains.  They can vary greatly across blockchain products.  In the case of public blockchains, anyone can join and access the data, no approval is required.</p>
 <p>Capability 7 is present in all blockchains but varies greatly by product.</p>
+<h3 id="references">References</h3>
+<p><a href="https://developer.ibm.com/technologies/blockchain/tutorials/cl-blockchain-basics-glossary-bluemix-trs/">Blockchain basics: Glossary and use cases</a></p>
+<p><a href="https://www.nist.gov/publications/blockchain-technology-overview">Blockchain Technology Overview</a></p>
 
 </div>
 
