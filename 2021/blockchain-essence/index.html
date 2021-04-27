@@ -110,8 +110,8 @@ Capabilities A blockchain or distributed ledger is essentially a replicated data
 
     <h1 id="the-essence-of-blockchain-technology-for-it-practitioners">The Essence of Blockchain Technology for IT Practitioners</h1>
 <p>This brief article describes the essence of Blockchain technology in terms that many IT professionals are familiar with.  The references at the end elaborate on the core concepts touched-upon here.</p>
-<h3 id="capabilities">Capabilities</h3>
-<p>A <strong>blockchain or distributed ledger</strong> is essentially a replicated database with the following capabilities.  These capabilities are largely common to both public (permissionless) and private (permissioned) blockchains:</p>
+<h2 id="capabilities">Capabilities</h2>
+<p>A <strong>blockchain</strong> or <strong>distributed ledger</strong> is essentially a replicated database with the following capabilities.  These capabilities are largely common to both public (permissionless) and private (permissioned) blockchains:</p>
 <br>
 <ol>
 <li><strong>An irrefutable and tamper-proof database log &ndash; the ledger</strong>
@@ -123,7 +123,7 @@ Capabilities A blockchain or distributed ledger is essentially a replicated data
 </li>
 <li><strong>The ledger is replicated, with eventual consistency through consensus</strong>
 <ul>
-<li>There is a replication process and a consensus process to ensure eventual consistency of all ledger replicas and automatically resolve replication conflicts.</li>
+<li>There is a replication process and a <a href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">consensus</a> process to ensure <a href="https://en.wikipedia.org/wiki/Eventual_consistency">eventual consistency</a> of all ledger replicas and automatically resolve replication conflicts.</li>
 <li>Different <em>participants</em> can have their own (one or more) replicas.  <em><strong>Participants</strong></em> are entities that can participate in the replication and consensus processes.</li>
 </ul>
 </li>
@@ -145,12 +145,13 @@ Capabilities A blockchain or distributed ledger is essentially a replicated data
 </li>
 <li><strong>APIs to provide controlled access to the above capabilities</strong></li>
 </ol>
-<h3 id="comments">Comments</h3>
+<h2 id="comments">Comments</h2>
+<p>The term <em><a href="https://en.wikipedia.org/wiki/Blockchain">blockchain</a></em> comes from the technique used to implement <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a>&rsquo;s ledger.  A similar technique or some variant of it is used in the implementation of the ledgers for most blockchain products.</p>
 <p>Capabilities 1, 2, and 3 above are the most fundamental and are truly the essence of blockchain technology.  The consensus process and transaction validation rules vary greatly across blockchain products.  Some blockchain products (e.g., <a href="https://www.hyperledger.org/use/hyperledger-indy">Hyperledger Indy</a>) have multiple ledgers, each supporting different transaction types.</p>
-<p>Capability 4 is present to some extent in all blockchain products, but can vary greatly.  For example, this capability is fairly limited in the case of the Bitcoin blockchain.</p>
+<p>Capability 4 is present to some extent in all blockchain products, but can vary greatly.  For example, this capability is fairly limited in the case of the <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a> blockchain.</p>
 <p>Capabilities 5 and 6 are the key differentiators between private and public blockchains.  They can vary greatly across blockchain products.  In the case of public blockchains, anyone can join and access the data, no approval is required.  Some blockchain products (e.g., <a href="https://www.hyperledger.org/use/hyperledger-indy">Hyperledger Indy</a>) have some aspects that are public and others that are permissioned.</p>
 <p>Capability 7 is present in all blockchains but varies greatly by product.</p>
-<h3 id="references">References</h3>
+<h2 id="references">References</h2>
 <p><a href="https://developer.ibm.com/technologies/blockchain/tutorials/cl-blockchain-basics-glossary-bluemix-trs/">Blockchain basics: Glossary and use cases</a></p>
 <p><a href="https://www.nist.gov/publications/blockchain-technology-overview">Blockchain Technology Overview</a></p>
 
