@@ -8,7 +8,7 @@
 These are comments on microservices I made between 2015 and 2017.  Some of the content still holds, some of it I no longer agree with.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.82.1" />
+        <meta name="generator" content="Hugo 0.92.1" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta property="og:title" content="Past Comments on Microservices: 2015-2017">
@@ -121,9 +121,9 @@ These are comments on microservices I made between 2015 and 2017.  Some of the c
 <p>The second article exemplifies some of the criteria of the first one.  But it also highlights another criterion which is not explicit in the first one &ndash; temporal decoupling.  If two functions are executed over different time frames and/or are asynchronous with respect to each other then they may be candidates to live in separate deployment units.</p>
 <h3 id="2016-12-27----excellent-discussion-of-microservices-adoption-considerations">2016-12-27 &ndash; Excellent discussion of microservices adoption considerations</h3>
 <p>The book Spring Microsrvices, by Rajesh RV, has a great overview of microservices adoption considerations in chapter 3. Very complete. Even if I don&rsquo;t agree 100%, it is very good.</p>
-<p>The book also includes a bunch of microservices KoolAid that I disagree with. See <a href="http://martinfowler.com/bliki/MicroservicePremium.html,">http://martinfowler.com/bliki/MicroservicePremium.html,</a> <a href="http://martinfowler.com/articles/microservice-trade-offs.html">http://martinfowler.com/articles/microservice-trade-offs.html</a>. Scalability and performance tuning is one, well covered in the first Fowler artible. Another big fallacy is the notion of independent testing and deployment. When microservices depend on each other, they have to be tested together. Semantic changes (including certain bug fixes) in a microservice likely imply the need to also change and redeploy other microservices that depend on it. One more: the use of asynchronous processing, often conflated with microservices, is nothing new and is really independent of microservices.</p>
+<p>The book also includes a bunch of microservices KoolAid that I disagree with. See <a href="http://martinfowler.com/bliki/MicroservicePremium.html">http://martinfowler.com/bliki/MicroservicePremium.html</a>, <a href="http://martinfowler.com/articles/microservice-trade-offs.html">http://martinfowler.com/articles/microservice-trade-offs.html</a>. Scalability and performance tuning is one, well covered in the first Fowler artible. Another big fallacy is the notion of independent testing and deployment. When microservices depend on each other, they have to be tested together. Semantic changes (including certain bug fixes) in a microservice likely imply the need to also change and redeploy other microservices that depend on it. One more: the use of asynchronous processing, often conflated with microservices, is nothing new and is really independent of microservices.</p>
 <h3 id="2017-01-20-a-blog-on-microservices">2017-01-20: A blog on microservices</h3>
-<p>In my opinion, microservices are overhyped.  Many of the principles make sense, but people are embarking on microservices projects like lemmings.  The following articles provide good perspective: <a href="https://martinfowler.com/bliki/MicroservicePremium.html,">https://martinfowler.com/bliki/MicroservicePremium.html,</a> <a href="https://martinfowler.com/articles/microservice-trade-offs.html">https://martinfowler.com/articles/microservice-trade-offs.html</a>.</p>
+<p>In my opinion, microservices are overhyped.  Many of the principles make sense, but people are embarking on microservices projects like lemmings.  The following articles provide good perspective: <a href="https://martinfowler.com/bliki/MicroservicePremium.html">https://martinfowler.com/bliki/MicroservicePremium.html</a>, <a href="https://martinfowler.com/articles/microservice-trade-offs.html">https://martinfowler.com/articles/microservice-trade-offs.html</a>.</p>
 <p>Sam Newell&rsquo;s book (<a href="http://shop.oreilly.com/product/0636920033158.do">http://shop.oreilly.com/product/0636920033158.do</a>) and YouTube presentations (e.g., <a href="https://www.youtube.com/watch?v=PFQnNFe27kU">https://www.youtube.com/watch?v=PFQnNFe27kU</a>) are good sources of architectural advice on microservices, should you decide to go down that path.</p>
 <p>Figuring out the right granularity for your microservices is a key challenge.  People will often end up with microservices that are too fine-grained.</p>
 <p>Developing and deploying microservices involves many layers of architecture:</p>
@@ -273,7 +273,7 @@ These are comments on microservices I made between 2015 and 2017.  Some of the c
                 </div>
 
                 <p class="footer-copyright">
-                    <span style="color: white;">Copyright &copy; 2021 Paulo Villela - All rights reserved</span>
+                    <span style="color: white;">Copyright &copy; 2022 Paulo Villela - All rights reserved</span>
                     <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
                 </p>
                 <p class="footer-copyright">

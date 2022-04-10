@@ -7,7 +7,7 @@
         <meta name="description" content="Persistence Wrapper in Golang When working with databases, there is typically a need to deal with record context information, required for persistence, in addition to the domain model entities&#39; natural attributes. For example, some databases require a synthetic key field and some database operations may require an optimistic concurrency token field. This article discusses different approaches to address this need, focusing on Go but also including, for comparison, brief references to approaches used with JVM languages.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.82.1" />
+        <meta name="generator" content="Hugo 0.92.1" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta property="og:title" content="Persistence Wrapper in Golang">
@@ -135,7 +135,7 @@
 <p>The use of approach 1 in Go looks like this:</p>
 <div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -153,7 +153,7 @@
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// RecCtx is a type that holds platform-specific database record context information,
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// RecCtx is a type that holds platform-specific database record context information,
 </span><span style="color:#408080;font-style:italic">// e.g., an optimistic locking token and/or a record ID.  DAFs may accept this type as
 </span><span style="color:#408080;font-style:italic">// a parameter or return this type, together with domain entity types.
 </span><span style="color:#408080;font-style:italic"></span><span style="color:#008000;font-weight:bold">type</span> RecCtx <span style="color:#008000;font-weight:bold">interface</span> {
@@ -176,7 +176,7 @@ article, recCtx, err = <span style="color:#00f">ArticleUpdateDaf</span>(article,
 <p>This approach uses the above described type <code>RecCtx</code> within a struct.  The use of approach 2 in Go looks like this:</p>
 <div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -208,7 +208,7 @@ article, recCtx, err = <span style="color:#00f">ArticleUpdateDaf</span>(article,
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// PW wraps a domain entity and RecCtx together.  It can be returned or accepted by a 
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#408080;font-style:italic">// PW wraps a domain entity and RecCtx together.  It can be returned or accepted by a 
 </span><span style="color:#408080;font-style:italic">// DAF as an alternative to using RecCtx and the entity type separately.  This is most
 </span><span style="color:#408080;font-style:italic">// useful when there are multiple entity objects involved as inputs or outputs of a DAF.
 </span><span style="color:#408080;font-style:italic">// The type parameter T can either be a domain entity type or the pointer type thereof,
@@ -249,13 +249,13 @@ pwArticle, err = <span style="color:#00f">ArticleUpdateDaf</span>(pwArticle)
 <p>This alternative approach looks like:</p>
 <div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">type</span> Pw[T any] <span style="color:#008000;font-weight:bold">interface</span> {
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">type</span> Pw[T any] <span style="color:#008000;font-weight:bold">interface</span> {
     <span style="color:#00f">Entity</span>() T       <span style="color:#408080;font-style:italic">// equivalent to the Entity field in the above struct
 </span><span style="color:#408080;font-style:italic"></span>    <span style="color:#00f">Copy</span>(t T) Pw[T]  <span style="color:#408080;font-style:italic">// creates a new instance with the same RecCtx and t as the T part
 </span><span style="color:#408080;font-style:italic"></span>}
@@ -298,7 +298,7 @@ pwArticle, err = <span style="color:#00f">ArticleUpdateDaf</span>(pwArticle)
                 </div>
 
                 <p class="footer-copyright">
-                    <span style="color: white;">Copyright &copy; 2021 Paulo Villela - All rights reserved</span>
+                    <span style="color: white;">Copyright &copy; 2022 Paulo Villela - All rights reserved</span>
                     <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
                 </p>
                 <p class="footer-copyright">
