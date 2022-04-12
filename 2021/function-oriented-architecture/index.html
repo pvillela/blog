@@ -95,7 +95,7 @@
         </span>
         <br><br>
         
-            <span>Last updated <time datetime="2021-03-14" itemprop="datePublished">Sun, Apr 10, 2022</time></span>
+            <span>Last updated <time datetime="2021-03-14" itemprop="datePublished">Tue, Apr 12, 2022</time></span>
         
     </p>
     
@@ -365,7 +365,7 @@ From Robert C. Martin's <a href="https://blog.cleancoder.com/uncle-bob/2012/08/1
 <p>The possible advantage of such a grouping is the increased cohesiveness and reduction of cognitive load or noise resulting from the reduction of the number of files.</p>
 <h2 id="coupling-and-code-navigability-trade-offs">Coupling and code navigability trade-offs</h2>
 <p>The function-oriented architecture style&rsquo;s use of general function interfaces (instead of more traditional object-oriented interfaces with multiple methods) can make it harder to navigate from a flow that uses a stereotype instance to the stereotype&rsquo;s implementation.</p>
-<p>To mitigate that inconvenience without entirely giving-up the decoupling advantages previously discussed, the following techniques can be used.  Each has its trade-offs:</p>
+<p>To mitigate that inconvenience without entirely giving-up the decoupling advantages previously discussed, the following techniques can be used.  Each has its trade-offs.</p>
 <ol>
 <li>
 <p><strong>Naming of the variables representing stereotype dependencies</strong></p>
@@ -394,11 +394,35 @@ From Robert C. Martin's <a href="https://blog.cleancoder.com/uncle-bob/2012/08/1
 <li>By searching in an IDE for the type alias minus its suffix, the implementation file can be easily found, thus providing navigability without coupling.  When the type alias is defined in the same file as the dependency stereotype instance, by looking-up the definition of the type alias one would land directly on the dependency stereotype instance file.</li>
 </ul>
 </li>
-<li>
-<p><strong>Direct calling of BF instances</strong></p>
+</ol>
+<h4 id="direct-calling-of-bf-instances">Direct calling of BF instances</h4>
 <p>Flows and BFs are allowed to directly call BF instances that do not require configuration properties.  Doing so defines direct dependencies between the calling and called modules.  The advantage of a direct call in this case is that it facilitates navigation of the code from caller to callee.  Since the called BFs are pure functions, the direct calls do not introduce platform dependencies.  So, such direct calls are OK, except from the perspective of being able to unit test the caller without depending on the callee.</p>
-<p>The provide the flexibility to unit test the caller without the dependency, one can implement the calling module with two stereotype instance constructors, one of which takes the called BF as an input parameter and the other which calls the first one passing the BF implementation as an argument.</p>
-<p>For example, in Go:</p>
+<p>To provide the flexibility to unit test the caller without the dependency, one can implement the calling module with two stereotype instance constructors, one of which takes the called BF as an input parameter and the other which calls the first one passing the BF implementation as an argument.</p>
+<p>The sample Go code below illustrates:</p>
+<ul>
+<li>The implementation of a BF that does not require configuration properties, using pattern 3 above.</li>
+<li>A flow that calls the BF directly, including two constructors, one of which enables unit testing without the BF dependency.</li>
+<li>An instantiation of the flow using the constructor that calls the BF directly, i.e., the BF dependency does not need to be provided to the constructor.</li>
+<li>A unit test of the flow where the BF dependency is mocked.</li>
+</ul>
+<p><strong>BF</strong></p>
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">type</span> ArticleCheckOwnerBfT = <span style="color:#008000;font-weight:bold">func</span>(article model.Article, username <span style="color:#b00040">string</span>) <span style="color:#b00040">error</span>
+
+<span style="color:#008000;font-weight:bold">var</span> ArticleCheckOwnerBfI ArticleCheckOwnerBfT = <span style="color:#008000;font-weight:bold">func</span>(article model.Article, username <span style="color:#b00040">string</span>) <span style="color:#b00040">error</span> {
+	<span style="color:#408080;font-style:italic">// ... implementation
+</span><span style="color:#408080;font-style:italic"></span>}
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Flow that calls the BF</strong></p>
 <div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -453,15 +477,56 @@ From Robert C. Martin's <a href="https://blog.cleancoder.com/uncle-bob/2012/08/1
 </span><span style="color:#408080;font-style:italic"></span>}
 </code></pre></td></tr></table>
 </div>
-</div><p>``</p>
-<p>Notice the naming conventions used in the example above:</p>
+</div><p><strong>Flow instantiation without need to pass BF as parameter</strong></p>
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">var</span> articleGetBySlugDaf = daf.<span style="color:#00f">ArticleGetBySlugDafC</span>(<span style="color:#408080;font-style:italic">/* config params */</span>)
+<span style="color:#008000;font-weight:bold">var</span> articleGetAndCheckOwnerFl = fs.<span style="color:#00f">ArticleGetAndCheckOwnerFlC</span>(articleGetBySlugDaf)
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>Unit test of flow with mocked BF</strong></p>
+<div class="highlight"><div style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#008000;font-weight:bold">var</span> mockArticleCheckOwnerBf ArticleCheckOwnerBfT = <span style="color:#008000;font-weight:bold">func</span>(article model.Article, username <span style="color:#b00040">string</span>) <span style="color:#b00040">error</span> {
+	<span style="color:#408080;font-style:italic">// ... mock implementation
+</span><span style="color:#408080;font-style:italic"></span>}
+
+<span style="color:#008000;font-weight:bold">var</span> mockArticleGetBySlugDaf = <span style="color:#408080;font-style:italic">/* mock implementation of DAF */</span>
+
+<span style="color:#008000;font-weight:bold">var</span> articleGetAndCheckOwnerFl = <span style="color:#00f">ArticleGetAndCheckOwnerFlC0</span>(
+    mockArticleGetBySlugDaf,
+    mockArticleCheckOwnerBf,
+)
+
+<span style="color:#408080;font-style:italic">// Invoke articleGetAndCheckOwnerFl with test inputs and assert expected results.
+</span><span style="color:#408080;font-style:italic">// ...
+</span></code></pre></td></tr></table>
+</div>
+</div><p>Notice the naming conventions used in the above sample code:</p>
 <ul>
 <li><code>ArticleCheckOwnerBfT</code> is the type of the BF instance that the flow needs to call.</li>
 <li><code>ArticleCheckOwnerBfI</code> is the function that implements the <code>ArticleCheckOwnerBfT</code> type.</li>
 <li>The module that defines <code>ArticleCheckOwnerBfT</code> also contains the implementation <code>ArticleCheckOwnerBfI</code>.</li>
 </ul>
-</li>
-</ol>
 <h2 id="function-flow-pattern">Function flow pattern</h2>
 <h3 id="sample-flow-diagram">Sample flow diagram</h3>
 <h3 id="sample-flow-code">Sample flow code</h3>
