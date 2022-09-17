@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Paulo Villela - All rights reserved</copyright>
-    <lastBuildDate>Sat, 24 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://pvillela.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Module Configuration</title>
+      <link>https://pvillela.github.io/blog/2022/module-configuration/</link>
+      <pubDate>Sat, 17 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://pvillela.github.io/blog/2022/module-configuration/</guid>
+      <description>Module Configuration Every nontrivial application requires some form of external configuration capability that allows configuration properties to be defined separately from application code.
+The key considerations when designing/selecting a configuration framework are:
+ Type safety &amp;ndash; have the compiler detect many or most configuration problems rather than waiting for a runtime error. Fail-fast &amp;ndash; if there are runtime configuration errors, they should happen at application startup. Minimization of module dependencies &amp;ndash; the configuration approach and framework should support low coupling/dependence among modules.</description>
+    </item>
+    
     <item>
       <title>The Essence of Blockchain Technology for IT Practitioners</title>
       <link>https://pvillela.github.io/blog/2021/blockchain-essence/</link>

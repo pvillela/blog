@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Module Configuration &middot; Paulo Villela</title>
+        <meta name="description" content="Module Configuration Every nontrivial application requires some form of external configuration capability that allows configuration properties to be defined separately from application code.
+The key considerations when designing/selecting a configuration framework are:
+ Type safety &ndash; have the compiler detect many or most configuration problems rather than waiting for a runtime error. Fail-fast &ndash; if there are runtime configuration errors, they should happen at application startup. Minimization of module dependencies &ndash; the configuration approach and framework should support low coupling/dependence among modules.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.92.1" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Module Configuration">
+<meta property="og:description" content="Module Configuration Every nontrivial application requires some form of external configuration capability that allows configuration properties to be defined separately from application code.
+The key considerations when designing/selecting a configuration framework are:
+ Type safety &ndash; have the compiler detect many or most configuration problems rather than waiting for a runtime error. Fail-fast &ndash; if there are runtime configuration errors, they should happen at application startup. Minimization of module dependencies &ndash; the configuration approach and framework should support low coupling/dependence among modules.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pvillela.github.io/blog/2022/module-configuration/">
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/site.css">
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/syntax.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href="https://pvillela.github.io/blog/css/my_style_mods.css">
+
+        
+        
+        
+        
+        
+
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a href="https://pvillela.github.io/blog/">Paulo Villela</a>
+                            </h1>
+                        
+                        
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" aria-label="Github" href="https://github.com/pvillela" rel="me">
+                                <i class="fa fa-github-alt" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" aria-label="LinkedIn" href="https://linkedin.com/in/pvillela/" rel="me">
+                                <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            </a>
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/contact/">Contact</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a href="https://pvillela.github.io/blog/page/about/">About</a>
+    </li>
+
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Module Configuration</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2022-09-17" itemprop="datePublished">Sat, Sep 17, 2022</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://pvillela.github.io/blog/page/about" itemprop="url" rel="author">Paulo Villela</a>
+            </span>
+        </span>
+        <br><br>
+        
+    </p>
+    
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <h1 id="module-configuration">Module Configuration</h1>
+<p>Every nontrivial application requires some form of external configuration capability that allows configuration properties to be defined separately from application code.</p>
+<p>The key considerations when designing/selecting a configuration framework are:</p>
+<ul>
+<li>Type safety &ndash; have the compiler detect many or most configuration problems rather than waiting for a runtime error.</li>
+<li>Fail-fast &ndash; if there are runtime configuration errors, they should happen at application startup.</li>
+<li>Minimization of module dependencies &ndash; the configuration approach and framework should support low coupling/dependence among modules. Any dependence on a configuration framework should be minimal and unobtrusive.</li>
+<li>Unit testing ease &ndash; the configuration approach and framework should facilitate and not get in the way of unit testing.</li>
+<li>Ease of use &ndash; the configuration approach should be easy to adopt and use in the application code.</li>
+</ul>
+<p>There are three main configuration approaches:</p>
+<ul>
+<li><em>pull</em></li>
+<li><em>push-to-file</em></li>
+<li><em>push-to-function</em></li>
+</ul>
+<h3 id="_pull_-approach"><em>Pull</em> approach</h3>
+<h4 id="naive-pull"><em>Naive pull</em></h4>
+<ul>
+<li>Each module or function requiring configuration makes a direct call to a function or framework that returns application configuration information. The module or function selects and uses whatever configuration properties it needs from the returned application configuration data structure.</li>
+<li>It is often used because it is simple to implement and use.</li>
+<li>This approach inevitably causes dependencies to be hard-wired and also introduces a dependency of all configurable modules and functions on the global application configuration source.</li>
+<li>Is often implemented in a simplistic way that exacerbates the above-mentioned dependencies, makes it harder to structure and control configuration information, and makes it hard to unit test modules.</li>
+</ul>
+<h4 id="pull-with-push-override"><em>Pull-with-push-override</em></h4>
+<ul>
+<li>The naive pull approach can be refined to yield a configuration approach that is easy to use and facilitates module unit testing. Ease of unit testing is comparable to that of the <em>push-to-file</em> approach.</li>
+<li>This involves constructing a file-level configuration object, used by functions defined in the file, that pulls in global application configuration but also allows configuration information to be injected for unit testing.</li>
+<li>When unit testing with this approach, configuration information must be pushed to each dependency.</li>
+</ul>
+<h3 id="push-to-variable-approach"><em>Push-to-variable</em> approach</h3>
+<ul>
+<li>
+<p>Each configurable module has a top-level variable that can be set with configuration information and which is accessed by functions in the file. For example a module can have an exported function <code>setConfig(configData)</code> that is called by application initialization logic to set the aforementioned top-level variable.</p>
+</li>
+<li>
+<p>This approach inevitably causes dependencies to be hard-wired.</p>
+</li>
+<li>
+<p>The <em>push-to-file</em> approach requires a few more files, and a bit more work, but it avoids a direct dependence on a global application configuration source. It naturally enables unit testing by allowing configuration information to be pushed to files.</p>
+</li>
+<li>
+<p>When unit testing with this approach, configuration information must be pushed to each dependency.</p>
+</li>
+<li>
+<p>Using this approach for modules with top-level variables that depend on configuration information leads to circular dependencies and the use of uninitialized variables. This is because, during initialization, the module/package to be configured is loaded so that its exported configuration function can be called by the initialization logic but, as the module/package to be configured is loaded, its top-level variables are initialized and that (by assumption) requires the configuration information that has not yet been injected into the module/package. This problem can be solved by moving top-level variables that depend on configuration information to a separate module/package and having those variables reference the top-level configuration variable in the original module/package.</p>
+</li>
+</ul>
+<h3 id="_push-to-function_-approach"><strong><em>Push-to-function</em></strong> approach</h3>
+<ul>
+<li>Each configurable function needs to be created from a factory/constructor function or class that takes the required configuration properties as input. Application initialization logic is responsible for calling the factories/constructors and pass the required configuration information to create configured function instances.</li>
+<li>Goes hand-in-hand with dependency injection. If function f depends on a configurable function g then f needs to be instantiated via a factory function or class fC that takes a configured instance of g as an input.</li>
+<li>Minimizes coupling among modules, provides the greatest unit testing flexibility, and easily enables the creation of multiple instances of the same function with different configurations.</li>
+<li>Requires the most planning, the highest number of files, and the most work of all the configuration approaches.</li>
+</ul>
+<h2 id="examples">Examples</h2>
+<p><a href="https://github.com/pvillela/module-config">This repo</a> demonstrates simple frameworks and patterns for the above configuration approaches, written in Kotlin, TypeScript, and Go (under the <code>kt</code>, <code>ts</code>, and <code>go</code> directories, respectively).</p>
+<p><em>Note: Unlike the <code>ts</code> and <code>go</code> directories, the project definition files for Kotlin code are not under the <code>kt</code> directory. That is because this code was created with IntelliJ IDEA, which currently has a bug that requires a project containing a Kotlin module to be a top-level Kotlin project.</em></p>
+<p>Notice that the <em>push</em> framework examples have a <em>pull</em> aspect to them as what is pushed is a thunk function that returns the configuration data, not the configuration data itself. The reason for that is to provide the flexibility to support configuration properties that change dynamically at runtime. There is no real performance penalty associated with the use a thunk instead of the data structure itself since the thunk can simply return a cached data structure by reference.</p>
+
+</div>
+
+        <footer class="post-footer clearfix"><div class="share">
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a href="https://pvillela.github.io/blog/">Paulo Villela</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#" aria-label="Back to Top">
+                        <i class="fa fa-angle-up" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span style="color: white;">Copyright &copy; 2022 Paulo Villela - All rights reserved</span>
+                    <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://pvillela.github.io/blog/js/jquery-1.11.3.min.js"></script>
+        <script src="https://pvillela.github.io/blog/js/jquery.fitvids.js"></script>
+        <script src="https://pvillela.github.io/blog/js/scripts.js"></script>
+    </body>
+</html>
+
