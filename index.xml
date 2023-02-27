@@ -66,7 +66,7 @@ Elements These are the core concepts and components of the solution:
       <pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://pvillela.github.io/blog/2021/function-oriented-architecture/</guid>
-      <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
+      <description>Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past several years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</description>
     </item>
     
     <item>

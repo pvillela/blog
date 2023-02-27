@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Function-Oriented Architecture (this is a work in progress) &middot; Paulo Villela</title>
-        <meta name="description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
+        <meta name="description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past several years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.92.1" />
+        <meta name="generator" content="Hugo 0.92.2" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta property="og:title" content="Function-Oriented Architecture (this is a work in progress)">
-<meta property="og:description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
+<meta property="og:description" content="Function-Oriented Architecture This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past several years. This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://pvillela.github.io/blog/2021/function-oriented-architecture/">
         <link rel="stylesheet" href="https://pvillela.github.io/blog/dist/site.css">
@@ -95,7 +95,7 @@
         </span>
         <br><br>
         
-            <span>Last updated <time datetime="2021-03-14" itemprop="datePublished">Sat, Sep 17, 2022</time></span>
+            <span>Last updated <time datetime="2021-03-14" itemprop="datePublished">Mon, Feb 27, 2023</time></span>
         
     </p>
     
@@ -105,7 +105,7 @@
     
 
     <h1 id="function-oriented-architecture">Function-Oriented Architecture</h1>
-<p>This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past six years.  This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</p>
+<p>This report collects my thoughts on function-oriented architecture, a concept that has been shaped primarily by two very large and successful systems I architected over the past several years.  This report is a work-in-progress that evolves as I write down my ideas and experiences on this topic, and as I continue to get feedback from other software architects and developers, especially those who worked with me on the aforementioned projects.</p>
 <h2 id="motivation-and-requirements">Motivation and requirements</h2>
 <p>This report describes a way to organize the internal structure of service executables to meet these key objectives:</p>
 <ul>
@@ -274,9 +274,13 @@ From Robert C. Martin's <a href="https://blog.cleancoder.com/uncle-bob/2012/08/1
 <p>A <em><strong>Platform-Specific Data</strong></em> module implements a data structure that contains platform-specific data and, possibly, convenience methods and validation methods.  Such a data structure is used for data transfer to/from platform services, e.g., a database, a queue, an event hub, or a remote service.  This kind of module may depend on <em>Business Data</em> modules and other <em>Platform-Specific Data</em> modules, but it may not depend on any other stereotypes.</p>
 </li>
 </ul>
-<p>A key guiding principle in this model is that each of the subkinds of the <em>Function</em> stereotype does only one kind of thing.</p>
-<p>Another key principle is that only <em>Flow</em> (including <em>Service Flow</em>) modules are allowed to call other subkinds of the <em>Function</em> stereotype.  With one exception, those calls are always through a general function interface, so there is no dependence between the flow and the modules that implement the called functions.  The exception is that a <em>Flow</em> instance is allowed to call a <em>Business Function</em> instance directly, if the BF does not require any configuration properties, instead of using a general function interface.  This exception is allowed for the sake of simplicity.  While this creates a direct dependency, that is typically not a problem as will be discussed later in this report.</p>
-<p>In particular, instances of <em>Business Function</em>, <em>Data Access Function</em>, <em>Service Client</em>, and <em>Event Publisher</em> are not allowed to call instances of the same or other stereotypes, with one exception.  Instances of <em>Business Function</em> are allowed to call other instances of <em>Business Function</em> directly (if the other BFs do not require any configuration properties) or through a general function interface.</p>
+<p>The <strong>first key guiding principle</strong> in this model is that each of the subkinds of the <em>Function</em> stereotype does only one kind of thing.</p>
+<p>The <strong>second key guiding principle</strong> is that the dependencies among subkinds of the <em>Function</em> stereotype are restricted as follows:</p>
+<ul>
+<li>Instances of <em>Flow</em> (including <em>Service Flow</em>) are allowed to call other subkinds of the <em>Function</em> stereotype.  With one exception, those calls are always through a general function interface, so there is no dependence between the flow and the modules that implement the called functions. The exception is that a <em>Flow</em> instance is allowed to call a <em>Business Function</em> instance directly. While this creates a direct dependency, that is typically not a problem as will be discussed later in this report.</li>
+<li>Instances of <em>Data Access Function</em>, <em>Service Client</em>, and <em>Event Publisher</em> are not allowed to call instances of the same or other stereotypes directly or through a general function interface.</li>
+<li>Instances of <em>Business Function</em> are allowed to call other instances of <em>Business Function</em> but not instances of other stereotypes directly or through a general function interface.</li>
+</ul>
 <p>Adherence to these principles enables module decoupling, an important feature of this function-oriented architecture.</p>
 <h2 id="use-case-realisation-and-service-structure">Use case realisation and service structure</h2>
 <p>The term <em><strong>Use Case</strong></em> is commonly used and understood by both business analysts and developers &ndash; we will not attempt to define it here.</p>
@@ -601,7 +605,7 @@ From Robert C. Martin's <a href="https://blog.cleancoder.com/uncle-bob/2012/08/1
                 </div>
 
                 <p class="footer-copyright">
-                    <span style="color: white;">Copyright &copy; 2022 Paulo Villela - All rights reserved</span>
+                    <span style="color: white;">Copyright &copy; 2023 Paulo Villela - All rights reserved</span>
                     <span> / Powered by <a href="https://gohugo.io/">Hugo</a></span>
                 </p>
                 <p class="footer-copyright">
